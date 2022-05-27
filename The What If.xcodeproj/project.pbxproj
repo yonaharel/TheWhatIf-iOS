@@ -8,21 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		F23D5AFE2841782200517C3C /* The_What_IfApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5AFD2841782200517C3C /* The_What_IfApp.swift */; };
-		F23D5B002841782200517C3C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5AFF2841782200517C3C /* ContentView.swift */; };
 		F23D5B022841782200517C3C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F23D5B012841782200517C3C /* Assets.xcassets */; };
 		F23D5B052841782200517C3C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F23D5B042841782200517C3C /* Preview Assets.xcassets */; };
-		F23D5B072841782200517C3C /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5B062841782200517C3C /* Persistence.swift */; };
 		F23D5B0A2841782200517C3C /* The_What_If.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F23D5B082841782200517C3C /* The_What_If.xcdatamodeld */; };
+		F23D5B112841794100517C3C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5B102841794100517C3C /* HomeView.swift */; };
+		F23D5B1328417AE500517C3C /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5B1228417AE500517C3C /* MainTabView.swift */; };
+		F23D5B1528417C2900517C3C /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5B1428417C2900517C3C /* MainViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		F23D5AFA2841782200517C3C /* The What If.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "The What If.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F23D5AFD2841782200517C3C /* The_What_IfApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = The_What_IfApp.swift; sourceTree = "<group>"; };
-		F23D5AFF2841782200517C3C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F23D5B012841782200517C3C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F23D5B042841782200517C3C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		F23D5B062841782200517C3C /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		F23D5B092841782200517C3C /* The_What_If.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = The_What_If.xcdatamodel; sourceTree = "<group>"; };
+		F23D5B102841794100517C3C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		F23D5B1228417AE500517C3C /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		F23D5B1428417C2900517C3C /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,9 +58,10 @@
 			isa = PBXGroup;
 			children = (
 				F23D5AFD2841782200517C3C /* The_What_IfApp.swift */,
-				F23D5AFF2841782200517C3C /* ContentView.swift */,
 				F23D5B012841782200517C3C /* Assets.xcassets */,
-				F23D5B062841782200517C3C /* Persistence.swift */,
+				F23D5B102841794100517C3C /* HomeView.swift */,
+				F23D5B1228417AE500517C3C /* MainTabView.swift */,
+				F23D5B1428417C2900517C3C /* MainViewModel.swift */,
 				F23D5B082841782200517C3C /* The_What_If.xcdatamodeld */,
 				F23D5B032841782200517C3C /* Preview Content */,
 			);
@@ -143,10 +146,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F23D5B072841782200517C3C /* Persistence.swift in Sources */,
-				F23D5B002841782200517C3C /* ContentView.swift in Sources */,
+				F23D5B1528417C2900517C3C /* MainViewModel.swift in Sources */,
+				F23D5B112841794100517C3C /* HomeView.swift in Sources */,
 				F23D5B0A2841782200517C3C /* The_What_If.xcdatamodeld in Sources */,
 				F23D5AFE2841782200517C3C /* The_What_IfApp.swift in Sources */,
+				F23D5B1328417AE500517C3C /* MainTabView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
