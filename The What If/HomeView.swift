@@ -118,7 +118,7 @@ struct HomeView: View {
     func GoalCard(goal: String, progress: Float = 0.5) -> some View {
    
         let color: Color = {
-            let colors = [Color.red, Color.blue, Color.green, Color.cyan, Color.black, .brown]
+            let colors = [Color.red, Color.blue, Color.green, Color.cyan, Color.gray, .brown]
             let colorIndex = (Int(goal) ?? 0) % colors.count
             return colors[colorIndex]
         }()

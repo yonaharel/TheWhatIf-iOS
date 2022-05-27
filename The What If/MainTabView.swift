@@ -32,6 +32,7 @@ enum TabItem{
 
 struct MainTabView: View {
 //    @EnvironmentObject var mainVM: MainViewModel
+    @Environment(\.colorScheme) var colorScheme
     @StateObject var mainVM: MainViewModel = .init()
     var items: [TabItem] = [
         .home,
@@ -56,10 +57,12 @@ struct MainTabView: View {
             HStack(alignment: .center) {
                 ForEach(items, id: \.self){ item in
                     buildTabBarItem(tabItem: item)
+                        .padding(.top, 25)
                 }
             }
             .padding()
-            .background(Color.gray.opacity(0.2))
+            .frame(height: 50)
+            .background(.gray.opacity(0.1))
         }
     }
     
@@ -77,7 +80,8 @@ struct MainTabView: View {
                     mainVM.currentTab = tabItem
                 }
             }
-            .foregroundColor(mainVM.currentTab == tabItem ? .black : .gray)
+            .foregroundColor(mainVM.currentTab == tabItem ? (colorScheme == .dark ? .white : .black) : .gray)
+            
     }
 }
 
