@@ -39,15 +39,20 @@ struct MainTabView: View {
         .settings
     ]
     var body: some View {
-        VStack(spacing: 0) {
-            switch mainVM.currentTab {
-            case .home:
-                HomeView()
-            case .settings:
-                Spacer()
-                EmptyView()
-            }
-            buildTabBar()
+        TabView(selection: $mainVM.currentTab){
+            HomeView()
+                .tabItem {
+                    buildTabBarItem(tabItem: .home)
+                }.tag(TabItem.home)
+            
+            SettingsView()
+                .tabItem {
+                    buildTabBarItem(tabItem: .settings)
+                }.tag(TabItem.settings)
+            
+        }
+        .onChange(of: mainVM.currentTab) { newValue in
+            print(newValue)
         }
     }
     
@@ -74,12 +79,13 @@ struct MainTabView: View {
             Text(tabItem.text)
                 .font(.callout)
                 .fontWeight(.semibold)
-        }.frame(maxWidth: .infinity)
-            .onTapGesture {
-                withAnimation{
-                    mainVM.currentTab = tabItem
-                }
-            }
+        }//.frame(maxWidth: .infinity)
+//            .contentShape(Rectangle())
+//            .onTapGesture {
+//                withAnimation{
+//                    mainVM.currentTab = tabItem
+//                }
+//            }
             .foregroundColor(mainVM.currentTab == tabItem ? (colorScheme == .dark ? .white : .black) : .gray)
             
     }

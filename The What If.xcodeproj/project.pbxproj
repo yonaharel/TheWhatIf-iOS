@@ -14,6 +14,8 @@
 		F23D5B112841794100517C3C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5B102841794100517C3C /* HomeView.swift */; };
 		F23D5B1328417AE500517C3C /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5B1228417AE500517C3C /* MainTabView.swift */; };
 		F23D5B1528417C2900517C3C /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5B1428417C2900517C3C /* MainViewModel.swift */; };
+		F23D5B172841997A00517C3C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5B162841997A00517C3C /* SettingsView.swift */; };
+		F23D5B192842858500517C3C /* GoalDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5B182842858500517C3C /* GoalDetailsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +27,8 @@
 		F23D5B102841794100517C3C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		F23D5B1228417AE500517C3C /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		F23D5B1428417C2900517C3C /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		F23D5B162841997A00517C3C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F23D5B182842858500517C3C /* GoalDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalDetailsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +64,8 @@
 				F23D5AFD2841782200517C3C /* The_What_IfApp.swift */,
 				F23D5B012841782200517C3C /* Assets.xcassets */,
 				F23D5B102841794100517C3C /* HomeView.swift */,
+				F23D5B182842858500517C3C /* GoalDetailsView.swift */,
+				F23D5B162841997A00517C3C /* SettingsView.swift */,
 				F23D5B1228417AE500517C3C /* MainTabView.swift */,
 				F23D5B1428417C2900517C3C /* MainViewModel.swift */,
 				F23D5B082841782200517C3C /* The_What_If.xcdatamodeld */,
@@ -149,6 +155,8 @@
 				F23D5B1528417C2900517C3C /* MainViewModel.swift in Sources */,
 				F23D5B112841794100517C3C /* HomeView.swift in Sources */,
 				F23D5B0A2841782200517C3C /* The_What_If.xcdatamodeld in Sources */,
+				F23D5B172841997A00517C3C /* SettingsView.swift in Sources */,
+				F23D5B192842858500517C3C /* GoalDetailsView.swift in Sources */,
 				F23D5AFE2841782200517C3C /* The_What_IfApp.swift in Sources */,
 				F23D5B1328417AE500517C3C /* MainTabView.swift in Sources */,
 			);

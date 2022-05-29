@@ -12,69 +12,51 @@ struct HomeView: View {
     //    var goals = ["read a book", "workout1", "read a book1", "work1out", "read a book1"]
     @State private var midY: CGFloat = 0.0
     @State private var headerText = "Your Goals"
-    
+    @Namespace var animation
+    @State var selectedCard: String?
     var body: some View {
         NavigationView {
             GeometryReader{ proxy in
-                
                 ScrollView(.vertical, showsIndicators: false) {
-                    HStack {
-                        //text
-                        HeaderView(headerText: self.headerText, midY: $midY)
-                            .frame(height: 40, alignment: .leading)
-                            .padding(.vertical, 5)
-                            .padding(.leading, 10)
+                    ScrollViewReader { scrollProxy in
                         
                         HStack {
-                            Button(action: {
-                            }) {
-                                Image(systemName: "plus.circle")
-                                    .font(.largeTitle)
-                            }
+                            //text
+                            HeaderView(headerText: self.headerText, midY: $midY)
+                                .frame(height: 40, alignment: .leading)
+                                .padding(.vertical, 5)
+                                .padding(.leading, 10)
                             
-                            
-                        }.padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 16))
-                            .foregroundColor(.blue)
-                        
-                    } .frame(height: 40, alignment: .leading)
+                            HStack {
+                                Button(action: {
+                                }) {
+                                    Image(systemName: "plus.circle")
+                                        .font(.largeTitle)
+                                }
+                            }.padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 16))
+                                .foregroundColor(.blue)
+                        }
+                        .frame(height: 40, alignment: .leading)
                         .opacity(self.midY < 70 ? 0.0 : 1.0)
                         .frame(alignment: .bottom)
-                    
-                    
-                    buildGoalGrid(proxy: proxy)
-                        .padding(.bottom, 5)
+                        
+                        if let selectedCard = selectedCard {
+                            buildCardDetails(selected: selectedCard)
+                                .animation(.easeInOut(duration: 0.5).delay(0.5), value: selectedCard)
+                                .id("SELECTED")
+                        }
+                        
+                        buildGoalGrid(proxy: proxy)
+                            .padding(.bottom, 5)
+                            .onChange(of: selectedCard) { newValue in
+                                if newValue != nil {
+                                    withAnimation {
+                                        scrollProxy.scrollTo("SELECTED", anchor: .top)
+                                    }
+                                }
+                            }
+                    }
                 }
-//                .overlay(alignment: .bottom) {
-//                    //MARK: Add Button
-//                    Button {
-//                    } label: {
-//                        Label {
-//                            Text("Create a New Goal")
-//                                .font(.callout)
-//                                .fontWeight(.semibold)
-//                        } icon: {
-//                            Image(systemName: "plus.app.fill")
-//                        }
-//                        .foregroundColor(.white)
-//                        .padding(.vertical, 12)
-//                        .padding(.horizontal)
-//                        .background(.black, in: Capsule())
-//                    }
-//
-//                    //MARK: Linear Gradient BG
-//                    .padding(.vertical, 10)
-//                    .frame(maxWidth: .infinity)
-//                    .background {
-//                        LinearGradient(colors: [
-//                            .white.opacity(0.05),
-//                            .white.opacity(0.5),
-//                            .white.opacity(0.7),
-//                            .white
-//                        ], startPoint: .top, endPoint: .bottom)
-//                        .ignoresSafeArea()
-//                    }
-//                }
-                
             }
             .navigationBarTitle(self.midY < 70 ? Text(self.headerText) : Text(""), displayMode: .inline)
 
@@ -96,6 +78,34 @@ struct HomeView: View {
         
     }
     
+    @ViewBuilder
+    func buildCardDetails(selected: String) -> some View{
+        VStack(spacing: 5) {
+            HStack{
+                Spacer()
+                Image(systemName: "xmark")
+                    .padding()
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        withAnimation {
+                            self.selectedCard = nil
+                        }
+                    }
+            }
+            GoalCard(goal: selected)
+                .padding()
+              
+            Group {
+                Text("Your goal is \(selected)")
+                    .font(.title3.bold())
+                Text("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia do")
+                    .font(.title3)
+                    .multilineTextAlignment(.center)
+            }.padding()
+            
+        }
+    }
+    
     @ViewBuilder func buildGoalGrid(proxy: GeometryProxy) -> some View {
         
         let width = (proxy.size.width / 2) - 10
@@ -107,6 +117,12 @@ struct HomeView: View {
         LazyVGrid(columns: colums) {
             ForEach(Array(1...7), id: \.self){ goal in
                 GoalCard(goal: "\(goal)", progress: 0.5)
+                    .onTapGesture {
+                        withAnimation {
+                            selectedCard = "\(goal)"
+                        }
+                    }
+
             }
             
         }
@@ -136,7 +152,6 @@ struct HomeView: View {
                 .padding()
             ProgressBar(progress: progress)
                 .frame(width: 60, height: 60)
-//            ProgressView("some")
         }
         .padding()
         .frame(maxWidth: .infinity)
@@ -152,7 +167,8 @@ struct HomeView: View {
                     endPoint: .bottomTrailing
                 ))
         }
-        
+        .contentShape(Rectangle())
+                
     }
 }
 
@@ -177,7 +193,7 @@ struct ProgressBar: View {
                 .stroke(style: StrokeStyle(lineWidth: 10.0, lineCap: .round, lineJoin: .round))
                 .foregroundColor(Color.white)
                 .rotationEffect(Angle(degrees: 270.0))
-                .animation(.linear, value: true)
+                .animation(.linear, value: progress)
 //                .animation(.linear)
             Text(String(format: "%.0f%%", min(self.progress, 1.0)*100.0))
                 .font(.callout)
