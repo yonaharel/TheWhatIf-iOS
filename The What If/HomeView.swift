@@ -42,19 +42,21 @@ struct HomeView: View {
                         
                         if let selectedCard = selectedCard {
                             buildCardDetails(selected: selectedCard)
-                                .animation(.easeInOut(duration: 0.5).delay(0.5), value: selectedCard)
+//                                .animation(.easeInOut(duration: 0.5).delay(0.5), value: selectedCard)
+//                                .matchedGeometryEffect(id: "CARD", in: animation)
                                 .id("SELECTED")
-                        }
-                        
-                        buildGoalGrid(proxy: proxy)
-                            .padding(.bottom, 5)
-                            .onChange(of: selectedCard) { newValue in
-                                if newValue != nil {
-                                    withAnimation {
-                                        scrollProxy.scrollTo("SELECTED", anchor: .top)
+                        } else {
+                            buildGoalGrid(proxy: proxy)
+                                .padding(.bottom, 5)
+                                .onChange(of: selectedCard) { newValue in
+                                    if newValue != nil {
+                                        withAnimation {
+                                            scrollProxy.scrollTo("SELECTED", anchor: .top)
+                                        }
                                     }
                                 }
-                            }
+                             
+                        }
                     }
                 }
             }
@@ -94,7 +96,7 @@ struct HomeView: View {
             }
             GoalCard(goal: selected)
                 .padding()
-              
+
             Group {
                 Text("Your goal is \(selected)")
                     .font(.title3.bold())
@@ -168,7 +170,8 @@ struct HomeView: View {
                 ))
         }
         .contentShape(Rectangle())
-                
+        .matchedGeometryEffect(id: goal, in: animation)
+
     }
 }
 
