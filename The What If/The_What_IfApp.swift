@@ -9,11 +9,12 @@ import SwiftUI
 
 @main
 struct The_What_IfApp: App {
-//    @StateObject var mainVM: MainViewModel = .init()
+    let persistenceController = PersistenceController.shared
+
     var body: some Scene {
         WindowGroup {
             MainTabView()
-//                .environmentObject(mainVM)
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }

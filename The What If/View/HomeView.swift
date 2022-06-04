@@ -8,14 +8,17 @@
 import SwiftUI
 
 struct HomeView: View {
-//
-    //    var goals = ["read a book", "workout1", "read a book1", "work1out", "read a book1"]
+
     @State private var midY: CGFloat = 0.0
     @State private var headerText = "Your Goals"
     @Namespace var animation
-    @State var selectedCard: String?
+    @State var selectedCard: Goal?
+    @StateObject var goalVM: GoalViewModel = .init()
+    @Environment(\.self) var env
     var body: some View {
         NavigationView {
+       
+
             GeometryReader{ proxy in
                 ScrollView(.vertical, showsIndicators: false) {
                     ScrollViewReader { scrollProxy in
@@ -29,6 +32,7 @@ struct HomeView: View {
                             
                             HStack {
                                 Button(action: {
+                                    goalVM.isAddingNewGoal = true
                                 }) {
                                     Image(systemName: "plus.circle")
                                         .font(.largeTitle)
@@ -59,13 +63,22 @@ struct HomeView: View {
                         }
                     }
                 }
+                .sheet(isPresented: $goalVM.isAddingNewGoal, onDismiss: {
+                    if goalVM.isDeleted {
+                        self.selectedCard = nil
+                    }
+                    goalVM.resetGoalData()
+
+                }) {
+                    AddNewGoal().environmentObject(goalVM)
+                }
             }
             .navigationBarTitle(self.midY < 70 ? Text(self.headerText) : Text(""), displayMode: .inline)
 
             .toolbar {
                 if self.midY < 70 {
                     Button(action: {
-                        //                                    self.action1()
+                        self.goalVM.isAddingNewGoal = true
                     }) {
                         Image(systemName: "plus.circle")
                             .frame(width: 20, height: 20)
@@ -81,9 +94,17 @@ struct HomeView: View {
     }
     
     @ViewBuilder
-    func buildCardDetails(selected: String) -> some View{
+    func buildCardDetails(selected: Goal) -> some View{
         VStack(spacing: 5) {
             HStack{
+                Image(systemName: "pencil")
+                    .padding()
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        self.goalVM.editGoal = selected
+                        self.goalVM.isAddingNewGoal = true
+                        self.goalVM.setupGoal()
+                    }
                 Spacer()
                 Image(systemName: "xmark")
                     .padding()
@@ -96,14 +117,23 @@ struct HomeView: View {
             }
             GoalCard(goal: selected)
                 .padding()
-
+            
             Group {
-                Text("Your goal is \(selected)")
-                    .font(.title3.bold())
-                Text("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia do")
-                    .font(.title3)
-                    .multilineTextAlignment(.center)
-            }.padding()
+                VStack(alignment: .leading){
+                    Text("Your goal is \(selected.title ?? "")")
+                        .font(.title3.bold())
+                    if let date = selected.addedDate{
+                        Text("You added this goal in \(date.formatted(date: .abbreviated, time: .omitted)) at \(date.formatted(date: .omitted, time: .shortened))")
+                            .font(.title3.bold())
+                    }
+                    
+                    Text("Your Progress is \(NSNumber(value: selected.getProgress()).getPercentage())")
+                        .font(.title3)
+                        .multilineTextAlignment(.center)
+                }
+            }
+            .padding()
+            //            .animation(.easeInOut(duration: 1).delay(1))
             
         }
     }
@@ -117,14 +147,27 @@ struct HomeView: View {
         ]
         
         LazyVGrid(columns: colums) {
-            ForEach(Array(1...7), id: \.self){ goal in
-                GoalCard(goal: "\(goal)", progress: 0.5)
+            
+            DynamicFilteredView { (goal: Goal) in
+                GoalCard(goal: goal)
                     .onTapGesture {
                         withAnimation {
-                            selectedCard = "\(goal)"
+                            selectedCard = goal
                         }
                     }
-
+            } emptyView: {
+                VStack{
+                    Image(systemName: "plus.square.fill")
+                        .resizable()
+                        .frame(width: 120, height: 120)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            goalVM.isAddingNewGoal = true
+                        }
+                    Text("No Goals Right now, add new one")
+                        .multilineTextAlignment(.center)
+                }
+                .offset(x: 100, y: 200)
             }
             
         }
@@ -133,26 +176,30 @@ struct HomeView: View {
     
     
     @ViewBuilder
-    func GoalCard(goal: String, progress: Float = 0.5) -> some View {
-   
-        let color: Color = {
-            let colors = [Color.red, Color.blue, Color.green, Color.cyan, Color.gray, .brown]
-            let colorIndex = (Int(goal) ?? 0) % colors.count
-            return colors[colorIndex]
-        }()
-        
-        VStack(alignment: .center, spacing: 5){
-            Text(goal.uppercased())
+    func GoalCard(goal: Goal) -> some View {
+        let type = GoalType(rawValue: goal.type ?? "") ?? .book
+        let color: Color = type.goalColor
+        VStack(alignment: .center, spacing: 20){
+            
+            Image(systemName: type.getImage())
+                .resizable()
+                .foregroundColor(.white)
+                .frame(width: 30, height: 30)
+            
+            
+            Text(goal.title?.uppercased() ?? "")
                 .font(.headline)
                 .fontWeight(.semibold)
+                .multilineTextAlignment(.center)
                 .foregroundColor(Color.white)
-                .padding()
-            Text("Your Progress")
-                .font(.callout)
-                .fontWeight(.semibold)
-                .foregroundColor(Color.white)
-                .padding()
-            ProgressBar(progress: progress)
+                .frame(height: 80)
+            
+            //            Text("Your Progress")
+            //                .font(.callout)
+            //                .fontWeight(.semibold)
+            //                .foregroundColor(Color.white)
+            //                .padding()
+            ProgressBar(progress: goal.getProgress())
                 .frame(width: 60, height: 60)
         }
         .padding()
@@ -170,8 +217,25 @@ struct HomeView: View {
                 ))
         }
         .contentShape(Rectangle())
-        .matchedGeometryEffect(id: goal, in: animation)
-
+        .matchedGeometryEffect(id: goal.objectID, in: animation)
+        .contextMenu {
+            Button {
+                self.goalVM.editGoal = goal
+                self.goalVM.setupGoal()
+                self.goalVM.isAddingNewGoal = true
+            } label: {
+                Label("Edit Goal", systemImage: "pencil")
+            }
+            Button(role: .destructive) {
+                withAnimation{
+                    env.managedObjectContext.delete(goal)
+                    try? env.managedObjectContext.save()
+                    selectedCard = nil
+                }
+            } label: {
+                Label("Delege Goal", systemImage: "trash")
+            }
+        }
     }
 }
 
@@ -197,7 +261,6 @@ struct ProgressBar: View {
                 .foregroundColor(Color.white)
                 .rotationEffect(Angle(degrees: 270.0))
                 .animation(.linear, value: progress)
-//                .animation(.linear)
             Text(String(format: "%.0f%%", min(self.progress, 1.0)*100.0))
                 .font(.callout)
                 .bold()
@@ -224,5 +287,19 @@ struct HeaderView: View {
                 .bold()
                 .font(.largeTitle)
         }
+    }
+}
+extension NSNumber {
+    func getPercentage() -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .percent
+        formatter.maximumFractionDigits = 0 // You can set what you want
+        return formatter.string(from: self)!
+    }
+}
+
+extension Goal {
+    func getProgress() -> Float {
+        Float(progress / target)
     }
 }

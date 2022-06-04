@@ -31,7 +31,6 @@ enum TabItem{
 }
 
 struct MainTabView: View {
-//    @EnvironmentObject var mainVM: MainViewModel
     @Environment(\.colorScheme) var colorScheme
     @StateObject var mainVM: MainViewModel = .init()
     var items: [TabItem] = [
