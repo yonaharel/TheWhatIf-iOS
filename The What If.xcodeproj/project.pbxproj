@@ -18,6 +18,11 @@
 		F23D5B1528417C2900517C3C /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5B1428417C2900517C3C /* MainViewModel.swift */; };
 		F23D5B172841997A00517C3C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5B162841997A00517C3C /* SettingsView.swift */; };
 		F23D5B192842858500517C3C /* GoalDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5B182842858500517C3C /* GoalDetailsView.swift */; };
+		F2D8B2E3284BC6AB00E0843F /* UserDefaultUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D8B2E2284BC6AB00E0843F /* UserDefaultUtils.swift */; };
+		F2D8B2E6284BC7BF00E0843F /* Goal + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D8B2E5284BC7BF00E0843F /* Goal + Extensions.swift */; };
+		F2D8B2E8284BC7F700E0843F /* NSNumber + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D8B2E7284BC7F700E0843F /* NSNumber + Extensions.swift */; };
+		F2D8B2EA284BCFEA00E0843F /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D8B2E9284BCFEA00E0843F /* Time.swift */; };
+		F2D8B2ED284BD3BF00E0843F /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D8B2EC284BD3BF00E0843F /* NotificationManager.swift */; };
 		F2F34A7D284B778C004DA35C /* DynamicFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F34A7C284B778C004DA35C /* DynamicFilteredView.swift */; };
 		F2F34A7F284B7A63004DA35C /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F34A7E284B7A63004DA35C /* Persistence.swift */; };
 /* End PBXBuildFile section */
@@ -35,6 +40,11 @@
 		F23D5B1428417C2900517C3C /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		F23D5B162841997A00517C3C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F23D5B182842858500517C3C /* GoalDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalDetailsView.swift; sourceTree = "<group>"; };
+		F2D8B2E2284BC6AB00E0843F /* UserDefaultUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultUtils.swift; sourceTree = "<group>"; };
+		F2D8B2E5284BC7BF00E0843F /* Goal + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Goal + Extensions.swift"; sourceTree = "<group>"; };
+		F2D8B2E7284BC7F700E0843F /* NSNumber + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSNumber + Extensions.swift"; sourceTree = "<group>"; };
+		F2D8B2E9284BCFEA00E0843F /* Time.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Time.swift; sourceTree = "<group>"; };
+		F2D8B2EC284BD3BF00E0843F /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		F2F34A7C284B778C004DA35C /* DynamicFilteredView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicFilteredView.swift; sourceTree = "<group>"; };
 		F2F34A7E284B7A63004DA35C /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Persistence.swift; path = "../../Task Manager App/Task Manager/Task Manager/Persistence.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -93,7 +103,10 @@
 			children = (
 				F23D5AFD2841782200517C3C /* The_What_IfApp.swift */,
 				F23D5B012841782200517C3C /* Assets.xcassets */,
+				F2D8B2E4284BC7B200E0843F /* Utils */,
+				F2D8B2E1284BC69000E0843F /* Helpers */,
 				F21614E12844084D007C6C6D /* View */,
+				F2D8B2EB284BD3AE00E0843F /* Model */,
 				F21614E02844083E007C6C6D /* ViewModel */,
 				F2F34A7E284B7A63004DA35C /* Persistence.swift */,
 				F23D5B082841782200517C3C /* The_What_If.xcdatamodeld */,
@@ -108,6 +121,32 @@
 				F23D5B042841782200517C3C /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		F2D8B2E1284BC69000E0843F /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				F2D8B2E5284BC7BF00E0843F /* Goal + Extensions.swift */,
+				F2D8B2E7284BC7F700E0843F /* NSNumber + Extensions.swift */,
+				F2D8B2E9284BCFEA00E0843F /* Time.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		F2D8B2E4284BC7B200E0843F /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				F2D8B2E2284BC6AB00E0843F /* UserDefaultUtils.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		F2D8B2EB284BD3AE00E0843F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				F2D8B2EC284BD3BF00E0843F /* NotificationManager.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -186,9 +225,14 @@
 				F21614DF284401E8007C6C6D /* GoalViewModel.swift in Sources */,
 				F23D5B112841794100517C3C /* HomeView.swift in Sources */,
 				F23D5B0A2841782200517C3C /* The_What_If.xcdatamodeld in Sources */,
+				F2D8B2ED284BD3BF00E0843F /* NotificationManager.swift in Sources */,
+				F2D8B2E3284BC6AB00E0843F /* UserDefaultUtils.swift in Sources */,
+				F2D8B2E6284BC7BF00E0843F /* Goal + Extensions.swift in Sources */,
 				F2F34A7D284B778C004DA35C /* DynamicFilteredView.swift in Sources */,
 				F23D5B172841997A00517C3C /* SettingsView.swift in Sources */,
 				F23D5B192842858500517C3C /* GoalDetailsView.swift in Sources */,
+				F2D8B2E8284BC7F700E0843F /* NSNumber + Extensions.swift in Sources */,
+				F2D8B2EA284BCFEA00E0843F /* Time.swift in Sources */,
 				F23D5AFE2841782200517C3C /* The_What_IfApp.swift in Sources */,
 				F23D5B1328417AE500517C3C /* MainTabView.swift in Sources */,
 			);

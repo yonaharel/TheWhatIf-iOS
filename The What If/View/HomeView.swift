@@ -12,13 +12,10 @@ struct HomeView: View {
     @State private var midY: CGFloat = 0.0
     @State private var headerText = "Your Goals"
     @Namespace var animation
-    @State var selectedCard: Goal?
     @StateObject var goalVM: GoalViewModel = .init()
     @Environment(\.self) var env
     var body: some View {
         NavigationView {
-       
-
             GeometryReader{ proxy in
                 ScrollView(.vertical, showsIndicators: false) {
                     ScrollViewReader { scrollProxy in
@@ -44,28 +41,25 @@ struct HomeView: View {
                         .opacity(self.midY < 70 ? 0.0 : 1.0)
                         .frame(alignment: .bottom)
                         
-                        if let selectedCard = selectedCard {
-                            buildCardDetails(selected: selectedCard)
-//                                .animation(.easeInOut(duration: 0.5).delay(0.5), value: selectedCard)
-//                                .matchedGeometryEffect(id: "CARD", in: animation)
+                        if let selectedGoal = self.goalVM.selectedGoal {
+                            buildCardDetails(selected: selectedGoal)
                                 .id("SELECTED")
                         } else {
                             buildGoalGrid(proxy: proxy)
                                 .padding(.bottom, 5)
-                                .onChange(of: selectedCard) { newValue in
+                                .onChange(of: goalVM.selectedGoal) { newValue in
                                     if newValue != nil {
                                         withAnimation {
                                             scrollProxy.scrollTo("SELECTED", anchor: .top)
                                         }
                                     }
                                 }
-                             
+                            
                         }
                     }
-                }
-                .sheet(isPresented: $goalVM.isAddingNewGoal, onDismiss: {
+                }.sheet(isPresented: $goalVM.isAddingNewGoal, onDismiss: {
                     if goalVM.isDeleted {
-                        self.selectedCard = nil
+                        self.goalVM.selectedGoal = nil
                     }
                     goalVM.resetGoalData()
 
@@ -74,7 +68,6 @@ struct HomeView: View {
                 }
             }
             .navigationBarTitle(self.midY < 70 ? Text(self.headerText) : Text(""), displayMode: .inline)
-
             .toolbar {
                 if self.midY < 70 {
                     Button(action: {
@@ -111,7 +104,7 @@ struct HomeView: View {
                     .contentShape(Rectangle())
                     .onTapGesture {
                         withAnimation {
-                            self.selectedCard = nil
+                            self.goalVM.selectedGoal = nil
                         }
                     }
             }
@@ -127,57 +120,55 @@ struct HomeView: View {
                             .font(.title3.bold())
                     }
                     
-                    Text("Your Progress is \(NSNumber(value: selected.getProgress()).getPercentage())")
+                    Text("Your Progress is \(selected.getProgress().getPercentage())")
                         .font(.title3)
                         .multilineTextAlignment(.center)
                 }
             }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                withAnimation {
+                    self.goalVM.selectedGoal = nil
+                }
+            }
             .padding()
-            //            .animation(.easeInOut(duration: 1).delay(1))
             
         }
     }
     
     @ViewBuilder func buildGoalGrid(proxy: GeometryProxy) -> some View {
-        
-        let width = (proxy.size.width / 2) - 10
-        let colums = [
-            GridItem(.fixed(width)),
-            GridItem(.fixed(width)),
-        ]
-        
-        LazyVGrid(columns: colums) {
-            
-            DynamicFilteredView { (goal: Goal) in
-                GoalCard(goal: goal)
-                    .onTapGesture {
-                        withAnimation {
-                            selectedCard = goal
-                        }
+        DynamicFilteredView(proxy: proxy) { (goal: Goal) in
+            GoalCard(goal: goal)
+                .onTapGesture {
+                    withAnimation {
+                        self.goalVM.selectedGoal = goal
                     }
-            } emptyView: {
-                VStack{
-                    Image(systemName: "plus.square.fill")
-                        .resizable()
-                        .frame(width: 120, height: 120)
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            goalVM.isAddingNewGoal = true
-                        }
-                    Text("No Goals Right now, add new one")
-                        .multilineTextAlignment(.center)
                 }
-                .offset(x: 100, y: 200)
+        } emptyView: {
+            VStack{
+                Image(systemName: "plus.square.fill")
+                    .resizable()
+                    .frame(width: 80, height: 80)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        goalVM.isAddingNewGoal = true
+                    }
+                Text("You don't have any goals? Start Working man!")
+                    .font(.callout)
+                    .fontWeight(.semibold)
+                    .multilineTextAlignment(.center)
             }
-            
+            .offset(y: 100)
+            .padding()
         }
+        
         
     }
     
     
     @ViewBuilder
     func GoalCard(goal: Goal) -> some View {
-        let type = GoalType(rawValue: goal.type ?? "") ?? .book
+        let type = GoalType(rawValue: goal.type ?? "") ?? .other
         let color: Color = type.goalColor
         VStack(alignment: .center, spacing: 20){
             
@@ -228,9 +219,10 @@ struct HomeView: View {
             }
             Button(role: .destructive) {
                 withAnimation{
+                    NotificationManager.shared.removeNotification(for: goal)
                     env.managedObjectContext.delete(goal)
                     try? env.managedObjectContext.save()
-                    selectedCard = nil
+                    self.goalVM.selectedGoal = nil
                 }
             } label: {
                 Label("Delege Goal", systemImage: "trash")
@@ -287,19 +279,5 @@ struct HeaderView: View {
                 .bold()
                 .font(.largeTitle)
         }
-    }
-}
-extension NSNumber {
-    func getPercentage() -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .percent
-        formatter.maximumFractionDigits = 0 // You can set what you want
-        return formatter.string(from: self)!
-    }
-}
-
-extension Goal {
-    func getProgress() -> Float {
-        Float(progress / target)
     }
 }

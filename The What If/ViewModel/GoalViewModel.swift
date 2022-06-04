@@ -8,7 +8,7 @@
 import SwiftUI
 //import Combine
 import CoreData
-
+import Combine
 class GoalViewModel: ObservableObject {
     @Published var goalTitle: String = ""
     @Published var goalType: GoalType? = .book
@@ -21,7 +21,15 @@ class GoalViewModel: ObservableObject {
     //MARK: Editing Existing Goal Data
     @Published var editGoal: Goal?
     
+    @Published var selectedGoal: Goal?
     var isDeleted = false
+    var cancellables = Set<AnyCancellable>()
+    init() {
+        let context = PersistenceController.shared.container.viewContext
+        NotificationManager.shared.didRecieveNotificationId.sink { notificationId in
+            self.selectedGoal = self.selectGoalFromNotification(context: context, id: notificationId)
+        }.store(in: &cancellables)
+    }
 }
 
 extension GoalViewModel {
@@ -34,18 +42,20 @@ extension GoalViewModel {
         }
       
         var goal: Goal!
-      
+        var newProgress: Float? = nil
         if let editGoal = self.editGoal{
             goal = editGoal
+            newProgress = Float((currentProgress - goal.progress) / target)
         } else {
             goal = Goal(context: context)
+            goal.addedDate = Date.now
         }
         goal.title = goalTitle
         goal.progress = currentProgress
         goal.target = target
         goal.type = self.goalType!.rawValue
-        goal.addedDate = .now
         if let _ = try? context.save() {
+            NotificationManager.shared.scheduleNotification(for: goal, newProgress: newProgress)
             return true
         }
         return false
@@ -72,12 +82,27 @@ extension GoalViewModel{
         goalString = ""
         isDeleted = false
     }
+    func selectGoalFromNotification(context: NSManagedObjectContext, id: String) -> Goal?{
+        if id.isEmpty { return nil }
+        if let urlString = UserDefaultUtils.getString(for: .notificationId),
+           let url = URL(string: urlString),
+           let oid = context.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: url),
+           let goal = try? context.existingObject(with: oid) as? Goal{
+           return goal
+        }
+        return nil
+    }
 }
 
 enum GoalType: String, CaseIterable {
     case book = "Read A Book"
     case exercise = "Workout"
     case rest = "Take a Rest"
+    case other = "Other"
+}
+
+
+extension GoalType{
     
     func getImage() -> String {
         switch self {
@@ -87,6 +112,8 @@ enum GoalType: String, CaseIterable {
             return "heart.fill"
         case .rest:
             return "bed.double"
+        case .other:
+            return "questionmark.square"
         }
     }
     
@@ -98,6 +125,8 @@ enum GoalType: String, CaseIterable {
             return ("Number of minutes of excersize per day", "How Many did you do today?")
         case .rest:
             return ("How much minutes you want to rest each day?", "How many did you rest?")
+        case .other:
+            return ("What is your target", "What is your goal")
         }
     }
     var goalColor: Color {
@@ -108,6 +137,10 @@ enum GoalType: String, CaseIterable {
             return .red
         case .rest:
             return .brown
+        case .other:
+            return .green
         }
     }
+  
 }
+

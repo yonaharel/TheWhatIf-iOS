@@ -14,10 +14,10 @@ struct DynamicFilteredView<Content: View, EmptyContent: View, T>: View where T: 
     @FetchRequest var request: FetchedResults<T>
     let content: (T) -> Content
     let emptyView: () -> EmptyContent
-    
-    init(@ViewBuilder content: @escaping (T) -> Content,
+    let proxy: GeometryProxy
+    init(proxy: GeometryProxy, @ViewBuilder content: @escaping (T) -> Content,
          @ViewBuilder emptyView: @escaping () -> EmptyContent) {
-        
+        self.proxy = proxy
         _request = FetchRequest(entity: T.entity(), sortDescriptors: [.init(keyPath: \Goal.addedDate, ascending: false)], animation: .easeInOut)
         self.content = content
         self.emptyView = emptyView
@@ -61,8 +61,15 @@ struct DynamicFilteredView<Content: View, EmptyContent: View, T>: View where T: 
             if request.isEmpty {
                 self.emptyView()
             } else{
-                ForEach(request, id: \.objectID){ object in
-                    self.content(object)
+                let width = (proxy.size.width / 2) - 10
+                let colums = [
+                    GridItem(.fixed(width)),
+                    GridItem(.fixed(width)),
+                ]
+                LazyVGrid(columns: colums) {
+                    ForEach(request, id: \.objectID){ object in
+                        self.content(object)
+                    }
                 }
             }
         }

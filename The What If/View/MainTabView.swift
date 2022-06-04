@@ -45,10 +45,16 @@ struct MainTabView: View {
                 }.tag(TabItem.home)
             
             SettingsView()
+                .environmentObject(mainVM)
                 .tabItem {
                     buildTabBarItem(tabItem: .settings)
                 }.tag(TabItem.settings)
             
+        }
+        .onAppear{
+            if UserDefaultUtils.getString(for: .notificationId) != nil{
+                mainVM.currentTab = .home
+            }
         }
         .onChange(of: mainVM.currentTab) { newValue in
             print(newValue)

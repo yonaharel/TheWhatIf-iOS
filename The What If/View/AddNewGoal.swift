@@ -15,61 +15,31 @@ struct AddNewGoal: View {
     @Environment(\.self) var env
     @Environment(\.colorScheme) var scheme
     @State var savePressed: Bool = false
-    
+    var textColor: Color {
+        scheme == .dark ? .white : .black
+    }
     var body: some View {
-        VStack(spacing: 12) {
-            Text("Edit Goal")
-                .font(.title3.bold())
-                .frame(maxWidth: .infinity)
-                .overlay(alignment: .leading) {
-                    Button {
-                        env.dismiss()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.title3)
-//                            .render
-                            .foregroundColor(scheme == .dark ? .white : .black)
-                    }
-
-                }
-                .overlay(alignment: .trailing){
-                    Button {
-                        //TODO: Add a Delete Functionality
-                        if let editGoal = viewModel.editGoal {
-                            env.managedObjectContext.delete(editGoal)
-                            try? env.managedObjectContext.save()
-                            env.dismiss()
-                            viewModel.isDeleted = true
-                        }
-                    } label: {
-                        Image(systemName: "trash")
-                            .font(.title3)
-                            .foregroundColor(.red)
-                    }
-                    .opacity(viewModel.editGoal == nil ? 0 : 1)
-                }
+        VStack(alignment: .leading, spacing: 12) {
+            buildTitleAndButtons()
             
+            //MARK: Body
             
-            
-            VStack(alignment: .leading, spacing: 10) {
                 Text("Goal Title")
                     .font(.title2)
                     .fontWeight(.semibold)
-                    .foregroundColor(viewModel.goalTitle.isEmpty && savePressed ? .red : .black)
+                    .foregroundColor(viewModel.goalTitle.isEmpty && savePressed ? .red : textColor)
                 TextField("Goal Title", text: $viewModel.goalTitle)
                     .frame(maxWidth: .infinity)
                     .padding(.top, 10)
-            }
-            .padding(.top,10)
-            
+         
+        
             Divider()
         
-            VStack(alignment: .leading, spacing: 12) {
                 HStack {
                 Text("Goal Type")
                     .font(.title3)
                     .fontWeight(.light)
-                    .foregroundColor(.gray)
+                    .foregroundColor(textColor)
                     Spacer()
                     Menu {
                         let goalTypes = GoalType.allCases
@@ -85,34 +55,21 @@ struct AddNewGoal: View {
                     } label: {
                         if let goalType = viewModel.goalType {
                             Label(goalType.rawValue, systemImage: goalType.getImage())
-                                .foregroundColor(.black)
+                                .foregroundColor(textColor)
                         }else {
                             Text("Choose A Goal Type")
-                                .foregroundColor(.black)
+                                .foregroundColor(textColor)
                         }
                         
                     }
 
                 }
-            }
+            
             if let goalType = viewModel.goalType {
                 Divider()
                 goalInputFields(goalType: goalType)
             }
-            Button(action: saveGoal) {
-                Text("Add New Goal")
-                    .font(.callout)
-                    .fontWeight(.semibold)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 12)
-                    .foregroundColor(.white)
-                    .background{
-                        Capsule()
-                            .fill(.cyan)
-                    }
-            }
-            .frame(maxHeight: .infinity, alignment: .bottom)
-            .padding(.bottom, 10)
+            SaveButton("Save Goal", action: saveGoal)
         
         }
         .frame(maxHeight: .infinity, alignment: .top)
@@ -144,7 +101,7 @@ struct AddNewGoal: View {
             Text("What is your Goal?")
                 .font(.title2)
                 .fontWeight(.semibold)
-                .foregroundColor(viewModel.goalString.isEmpty && savePressed ? .red : .black)
+                .foregroundColor(viewModel.goalString.isEmpty && savePressed ? .red : textColor)
             TextField(labels.goalLabel, text: $viewModel.goalString)
                 .keyboardType(.numberPad)
                 
@@ -152,18 +109,89 @@ struct AddNewGoal: View {
             Text("What is your progress?")
                 .font(.title2)
                 .fontWeight(.semibold)
-                .foregroundColor(viewModel.progressString.isEmpty && savePressed ? .red : .black)
+                .foregroundColor(viewModel.progressString.isEmpty && savePressed ? .red : textColor)
             TextField(labels.progressLabel, text: $viewModel.progressString)
                 .keyboardType(.numberPad)
 
         }
     }
     
+    
+    @ViewBuilder
+    private func buildTitleAndButtons() -> some View{
+        //MARK: Header
+        Text(isEditing ? "Edit Goal" : "Add Goal")
+            .font(.title3.bold())
+            .frame(maxWidth: .infinity)
+            .overlay(alignment: .leading) {
+                Button {
+                    env.dismiss()
+                } label: {
+                    Image(systemName: "xmark")
+                        .font(.title3)
+//                            .render
+                        .foregroundColor(scheme == .dark ? .white : .black)
+                }
+
+            }
+            .overlay(alignment: .trailing){
+                Button {
+                    //TODO: Add a Delete Functionality
+                    if let editGoal = viewModel.editGoal {
+                        NotificationManager.shared.removeNotification(for: editGoal)
+                        env.managedObjectContext.delete(editGoal)
+                        try? env.managedObjectContext.save()
+                        env.dismiss()
+                        viewModel.isDeleted = true
+                    }
+                } label: {
+                    Image(systemName: "trash")
+                        .font(.title3)
+                        .foregroundColor(.red)
+                }
+                .opacity(isEditing ? 1 : 0)
+            }
+    }
+    
+}
+
+extension AddNewGoal {
+    var isEditing: Bool {
+        viewModel.editGoal != nil
+    }
 }
 
 struct AddNewGoal_Previews: PreviewProvider {
     static var previews: some View {
         AddNewGoal()
             .environmentObject(GoalViewModel())
+    }
+}
+
+
+struct SaveButton: View {
+    var action: () -> Void
+    var buttonText: String
+    
+    init(_ buttonText: String, action: @escaping () -> Void){
+        self.action = action
+        self.buttonText = buttonText
+    }
+    
+    var body: some View {
+        Button(action: action) {
+            Text(buttonText)
+                .font(.callout)
+                .fontWeight(.semibold)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+                .foregroundColor(.white)
+                .background{
+                    Capsule()
+                        .fill(.cyan)
+                }
+        }
+        .frame(maxHeight: .infinity, alignment: .bottom)
+        .padding(.bottom, 10)
     }
 }
