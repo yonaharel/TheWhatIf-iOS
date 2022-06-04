@@ -66,7 +66,7 @@ class NotificationManager: NSObject {
     }
     func removeNotification(for goal: Goal){
         let id = goal.objectID.uriRepresentation().absoluteString
-        notificationCenter.removePendingNotificationRequests(withIdentifiers: [id])
+        notificationCenter.removePendingNotificationRequests(withIdentifiers: [id, id + "_end"])
     }
     
 }
