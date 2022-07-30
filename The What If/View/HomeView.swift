@@ -13,7 +13,7 @@ struct HomeView: View {
     @State private var midY: CGFloat = 0.0
     @State private var headerText = "Your Goals"
     @Namespace var animation
-    @StateObject var goalVM: GoalViewModel = .init()
+    @StateObject var viewModel: GoalViewModel = GoalViewModel()
     @Environment(\.self) var env
     var body: some View {
         NavigationView {
@@ -30,7 +30,7 @@ struct HomeView: View {
                             
                             HStack {
                                 Button(action: {
-                                    goalVM.isAddingNewGoal = true
+                                    viewModel.isAddingNewGoal = true
                                 }) {
                                     Image(systemName: "plus.circle")
                                         .font(.largeTitle)
@@ -42,13 +42,13 @@ struct HomeView: View {
                         .opacity(self.midY < 70 ? 0.0 : 1.0)
                         .frame(alignment: .bottom)
                         
-                        if let selectedGoal = self.goalVM.selectedMotivation {
+                        if let selectedGoal = self.viewModel.selectedGoal {
                             buildCardDetails(selected: selectedGoal)
                                 .id("SELECTED")
                         } else {
                             buildGoalGrid(proxy: proxy)
                                 .padding(.bottom, 5)
-                                .onChange(of: goalVM.selectedGoal) { newValue in
+                                .onChange(of: viewModel.selectedGoal?.id) { newValue in
                                     if newValue != nil {
                                         withAnimation {
                                             scrollProxy.scrollTo("SELECTED", anchor: .top)
@@ -58,27 +58,27 @@ struct HomeView: View {
                             
                         }
                     }
-                }.sheet(isPresented: $goalVM.isAddingNewGoal, onDismiss: {
-                    if goalVM.isDeleted {
-                        self.goalVM.selectedGoal = nil
+                }.sheet(isPresented: $viewModel.isAddingNewGoal, onDismiss: {
+                    if viewModel.isDeleted {
+                        self.viewModel.selectedGoal = nil
                     }
-                    goalVM.resetGoalData()
-
-                }) {
+                    viewModel.editGoal = nil
+                }, content: {
                     if #available(iOS 16.0, *) {
-                        AddNewGoal().environmentObject(goalVM)
+                        EditGoalView(viewModel: EditGoalViewModel(editGoal: viewModel.editGoal))
+                            .environmentObject(self.viewModel)
                             .presentationDetents([.medium, .large])
                     } else {
-                        AddNewGoal().environmentObject(goalVM)
-                        // Fallback on earlier versions
+                        EditGoalView(viewModel: EditGoalViewModel(editGoal: viewModel.editGoal))
+                            .environmentObject(self.viewModel)
                     }
-                }
+                })
             }
             .navigationBarTitle(self.midY < 70 ? Text(self.headerText) : Text(""), displayMode: .inline)
             .toolbar {
                 if self.midY < 70 {
                     Button(action: {
-                        self.goalVM.isAddingNewGoal = true
+                        self.viewModel.isAddingNewGoal = true
                     }) {
                         Image(systemName: "plus.circle")
                             .frame(width: 20, height: 20)
@@ -94,16 +94,15 @@ struct HomeView: View {
     }
     
     @ViewBuilder
-    func buildCardDetails(selected: Motivation) -> some View{
+    func buildCardDetails(selected: Goal) -> some View{
         VStack(spacing: 5) {
             HStack{
                 Image(systemName: "pencil")
                     .padding()
                     .contentShape(Rectangle())
                     .onTapGesture {
-//                        self.goalVM.editGoal = selected
-//                        self.goalVM.isAddingNewGoal = true
-//                        self.goalVM.setupGoal()
+                        self.viewModel.editGoal = selected
+                        self.viewModel.isAddingNewGoal = true
                     }
                 Spacer()
                 Image(systemName: "xmark")
@@ -111,11 +110,11 @@ struct HomeView: View {
                     .contentShape(Rectangle())
                     .onTapGesture {
                         withAnimation {
-                            self.goalVM.selectedGoal = nil
+                            self.viewModel.selectedGoal = nil
                         }
                     }
             }
-            GoalCard(motivation: selected, isExpanded: true)
+            GoalCard(goal: selected, isExpanded: true)
                 .padding()
             
             Group {
@@ -133,7 +132,7 @@ struct HomeView: View {
             .contentShape(Rectangle())
             .onTapGesture {
                 withAnimation {
-                    self.goalVM.selectedGoal = nil
+                    self.viewModel.selectedGoal = nil
                 }
             }
             .padding()
@@ -141,14 +140,15 @@ struct HomeView: View {
         }
     }
     
-    @ViewBuilder func buildGoalGrid(proxy: GeometryProxy) -> some View {
+    @ViewBuilder
+    func buildGoalGrid(proxy: GeometryProxy) -> some View {
         DynamicFilteredView(proxy: proxy,
-                            shouldRefresh: $goalVM.shouldRefresh,
-                            VM: self.goalVM) { motivation in
-            GoalCard(motivation: motivation)
+                            shouldRefresh: $viewModel.shouldRefresh,
+                            VM: self.viewModel) { goal in
+            GoalCard(goal: goal)
                 .onTapGesture {
                     withAnimation {
-                        self.goalVM.selectedMotivation = motivation
+                        self.viewModel.selectedGoal = goal
                     }
                 }
         } emptyView: {
@@ -158,7 +158,7 @@ struct HomeView: View {
                     .frame(width: 80, height: 80)
                     .contentShape(Rectangle())
                     .onTapGesture {
-                        goalVM.isAddingNewGoal = true
+                        viewModel.isAddingNewGoal = true
                     }
                 Text("You don't have any goals? Start Working man!")
                     .font(.callout)
@@ -168,22 +168,22 @@ struct HomeView: View {
             .offset(y: 100)
             .padding()
         }
+        
     }
     
     
     @ViewBuilder
-    func GoalCard(motivation: Motivation, isExpanded: Bool = false) -> some View {
-        let type = GoalType(from: motivation.type)
-        let color: Color = type.goalColor
+    func GoalCard(goal: Goal, isExpanded: Bool = false) -> some View {
+        let color: Color = goal.type.goalColor
         VStack(alignment: .center, spacing: 20){
             
-            Image(systemName: type.getImage())
+            Image(systemName: goal.type.getImage())
                 .resizable()
                 .foregroundColor(.white)
                 .frame(width: 30, height: 30)
             
             
-            Text(motivation.title.uppercased())
+            Text(goal.title.uppercased())
                 .font(.headline)
                 .fontWeight(.semibold)
                 .multilineTextAlignment(.center)
@@ -192,10 +192,10 @@ struct HomeView: View {
             
             if isExpanded{
                 if #available(iOS 16, *){
-                    let progress = motivation.getProgress()
+                    let progress = goal.getProgress()
                     if progress >= 0 {
-                        Gauge(value: motivation.getProgress(), in: 0...1) {
-                            let percentageString = motivation.getProgress().getPercentage()
+                        Gauge(value: goal.getProgress(), in: 0...1) {
+                            let percentageString = goal.getProgress().getPercentage()
                             Text("You've made \(percentageString), You're getting closer!")
                                 .multilineTextAlignment(.center)
                                 .font(.title2)
@@ -206,12 +206,12 @@ struct HomeView: View {
                         .tint(.white)
                     }
                 } else {
-                    ProgressView(value: motivation.getProgress()) {
+                    ProgressView(value: goal.getProgress()) {
                         Label("Some Progress", systemImage: "person.fill.checkmark")
                     }
                 }
             } else {
-                ProgressBar(progress: motivation.getProgress())
+                ProgressBar(progress: goal.getProgress())
                     .frame(width: 60, height: 60)
             }
         }
@@ -234,7 +234,7 @@ struct HomeView: View {
             }
         }
         .contentShape(Rectangle())
-        .matchedGeometryEffect(id: motivation.id, in: animation)
+        .matchedGeometryEffect(id: goal.id, in: animation)
 //        .contextMenu {
 //            Button {
 //                self.goalVM.editGoal = goal

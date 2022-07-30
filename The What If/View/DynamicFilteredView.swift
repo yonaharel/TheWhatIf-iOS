@@ -14,8 +14,10 @@ protocol ItemsViewModel<Item>: AnyObject {
     func getItems() async throws -> [Item]
 }
 
-struct DynamicFilteredView<Content: View, EmptyContent: View, Item, VM: ItemsViewModel<Item>>: View {
-    //    @FetchRequest var request: FetchedResults<T>
+struct DynamicFilteredView<Content: View,
+                           EmptyContent: View,
+                           Item,
+                           VM: ItemsViewModel<Item>>: View {
     
     let content: (Item) -> Content
     let emptyView: () -> EmptyContent
@@ -34,7 +36,6 @@ struct DynamicFilteredView<Content: View, EmptyContent: View, Item, VM: ItemsVie
          filter: ((Item) -> Bool)? = nil) {
         self.viewModel = VM
         self.proxy = proxy
-        //        _request = FetchRequest(entity: T.entity(), sortDescriptors: [.init(keyPath: \Goal.addedDate, ascending: false)], animation: .easeInOut)
         self.content = content
         self.emptyView = emptyView
         self.filterFunction = filter
@@ -47,10 +48,17 @@ struct DynamicFilteredView<Content: View, EmptyContent: View, Item, VM: ItemsVie
             if items.isEmpty || self.networkError != nil {
                 VStack {
                     if let networkError {
-                        Text("ERROR \(networkError)")
-                            .font(.largeTitle)
-                            .bold()
-                            .foregroundColor(.red)
+                        Spacer()
+                        Text("\(networkError)")
+                            .font(.callout)
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.white)
+                            .padding()
+                            .background {
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(.red)
+                            }
+//                            .foregroundColor(.red)
                     }
                     self.emptyView()
                         .onAppear{ shouldRefresh = false }

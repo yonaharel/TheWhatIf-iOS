@@ -13,8 +13,3 @@ extension Goal {
         Float(progress / target)
     }
 }
-extension Motivation {
-    func getProgress() -> Float {
-        Float(progress / goal)
-    }
-}

@@ -1,5 +1,5 @@
 //
-//  AddNewGoal.swift
+//  EditGoalView.swift
 //  The What If
 //
 //  Created by Yona Harel on 29/05/2022.
@@ -7,9 +7,11 @@
 
 import SwiftUI
 import Combine
+import Shared
 
-struct AddNewGoal: View {
-    @EnvironmentObject var viewModel: GoalViewModel
+struct EditGoalView: View {
+    @StateObject var viewModel: EditGoalViewModel
+    @EnvironmentObject var goalViewModel: GoalViewModel
     @Environment(\.self) var env
     @Environment(\.colorScheme) var scheme
     @State var savePressed: Bool = false
@@ -104,13 +106,10 @@ struct AddNewGoal: View {
               !self.viewModel.progressString.trimmingCharacters(in: .whitespaces).isEmpty else {
             return
         }
-        //        if viewModel.addGoal(context: env.managedObjectContext){
-        //            env.dismiss()
-        //        }
         Task {
             do {
-                try await viewModel.createGoal(context: env.managedObjectContext)
-                self.viewModel.shouldRefresh = true
+                try await viewModel.createGoal()
+                goalViewModel.shouldRefresh = true
                 env.dismiss()
             } catch {
                 print(error)
@@ -182,10 +181,7 @@ struct AddNewGoal: View {
                     //TODO: Add a Delete Functionality
                     if let editGoal = viewModel.editGoal {
                         NotificationManager.shared.removeNotifications(for: editGoal)
-                        env.managedObjectContext.delete(editGoal)
-                        try? env.managedObjectContext.save()
                         env.dismiss()
-                        viewModel.isDeleted = true
                     }
                 } label: {
                     Image(systemName: "trash")
@@ -198,16 +194,15 @@ struct AddNewGoal: View {
     
 }
 
-extension AddNewGoal {
+extension EditGoalView {
     var isEditing: Bool {
         viewModel.editGoal != nil
     }
 }
 
-struct AddNewGoal_Previews: PreviewProvider {
+struct EditGoalView_Previews: PreviewProvider {
     static var previews: some View {
-        AddNewGoal()
-            .environmentObject(GoalViewModel())
+        EditGoalView(viewModel: .init())
     }
 }
 

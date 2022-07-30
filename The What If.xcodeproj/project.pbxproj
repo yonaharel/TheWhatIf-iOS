@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F21614DB2844011C007C6C6D /* AddNewGoal.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21614DA2844011C007C6C6D /* AddNewGoal.swift */; };
+		F20A199F2895E99800F0BE1E /* EditGoalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20A199E2895E99800F0BE1E /* EditGoalViewModel.swift */; };
+		F21614DB2844011C007C6C6D /* EditGoalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21614DA2844011C007C6C6D /* EditGoalView.swift */; };
 		F21614DF284401E8007C6C6D /* GoalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21614DE284401E8007C6C6D /* GoalViewModel.swift */; };
 		F23D5AFE2841782200517C3C /* The_What_IfApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5AFD2841782200517C3C /* The_What_IfApp.swift */; };
 		F23D5B022841782200517C3C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F23D5B012841782200517C3C /* Assets.xcassets */; };
@@ -46,7 +47,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		F21614DA2844011C007C6C6D /* AddNewGoal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewGoal.swift; sourceTree = "<group>"; };
+		F20A199E2895E99800F0BE1E /* EditGoalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditGoalViewModel.swift; sourceTree = "<group>"; };
+		F21614DA2844011C007C6C6D /* EditGoalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditGoalView.swift; sourceTree = "<group>"; };
 		F21614DE284401E8007C6C6D /* GoalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalViewModel.swift; sourceTree = "<group>"; };
 		F23D5AFA2841782200517C3C /* The What If.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "The What If.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F23D5AFD2841782200517C3C /* The_What_IfApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = The_What_IfApp.swift; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 			isa = PBXGroup;
 			children = (
 				F21614DE284401E8007C6C6D /* GoalViewModel.swift */,
+				F20A199E2895E99800F0BE1E /* EditGoalViewModel.swift */,
 				F23D5B1428417C2900517C3C /* MainViewModel.swift */,
 			);
 			path = ViewModel;
@@ -99,7 +102,7 @@
 			children = (
 				F23D5B102841794100517C3C /* HomeView.swift */,
 				F23D5B182842858500517C3C /* GoalDetailsView.swift */,
-				F21614DA2844011C007C6C6D /* AddNewGoal.swift */,
+				F21614DA2844011C007C6C6D /* EditGoalView.swift */,
 				F23D5B162841997A00517C3C /* SettingsView.swift */,
 				F23D5B1228417AE500517C3C /* MainTabView.swift */,
 				F2F34A7C284B778C004DA35C /* DynamicFilteredView.swift */,
@@ -279,7 +282,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F23D5B1528417C2900517C3C /* MainViewModel.swift in Sources */,
-				F21614DB2844011C007C6C6D /* AddNewGoal.swift in Sources */,
+				F21614DB2844011C007C6C6D /* EditGoalView.swift in Sources */,
 				F21614DF284401E8007C6C6D /* GoalViewModel.swift in Sources */,
 				F23D5B112841794100517C3C /* HomeView.swift in Sources */,
 				F23D5B0A2841782200517C3C /* The_What_If.xcdatamodeld in Sources */,
@@ -287,6 +290,7 @@
 				F2D8B2E3284BC6AB00E0843F /* UserDefaultUtils.swift in Sources */,
 				F2D8B2E6284BC7BF00E0843F /* Goal + Extensions.swift in Sources */,
 				F25B7C61288C6AFA00336D29 /* Persistence.swift in Sources */,
+				F20A199F2895E99800F0BE1E /* EditGoalViewModel.swift in Sources */,
 				F2F34A7D284B778C004DA35C /* DynamicFilteredView.swift in Sources */,
 				F23D5B172841997A00517C3C /* SettingsView.swift in Sources */,
 				F23D5B192842858500517C3C /* GoalDetailsView.swift in Sources */,

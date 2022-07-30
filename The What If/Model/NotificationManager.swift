@@ -8,6 +8,7 @@
 import Foundation
 import UserNotifications
 import Combine
+import Shared
 import UIKit
 
 class NotificationManager: NSObject {
@@ -50,9 +51,9 @@ class NotificationManager: NSObject {
             return
         }
         let content = UNMutableNotificationContent()
-        let id = goal.objectID.uriRepresentation().absoluteString
+        let id = goal.id.uuidString
 
-        content.title = goal.title ?? "Notification"
+        content.title = goal.title
         content.subtitle = Messages.startOfDayMessage(with: goal.getProgress())
         content.sound = .default
         content.targetContentIdentifier = id
@@ -72,7 +73,7 @@ class NotificationManager: NSObject {
         
     }
     func removeNotifications(for goal: Goal) {
-        let id = goal.objectID.uriRepresentation().absoluteString
+        let id = goal.id.uuidString
         let identifiers = [id, id + Messages.endPrefix, id + Messages.tomorrowPrefix]
         notificationCenter.removePendingNotificationRequests(withIdentifiers: identifiers)
     }
