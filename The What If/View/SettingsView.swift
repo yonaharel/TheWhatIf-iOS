@@ -28,17 +28,11 @@ struct SettingsView: View {
                         UserDefaultUtils.setValue(value: newValue, for: .notifications)
                         NotificationManager.shared.notificationCenter.removeAllPendingNotificationRequests()
                     }
-                    
-                    DatePicker(selection: $mainViewModel.userStartTime, in: ...Date.distantFuture, displayedComponents: .hourAndMinute) {
+                    let today = Date()
+                    DatePicker(selection: $mainViewModel.userStartTime, in: today.startOfDay...today.endOfDay, displayedComponents: .hourAndMinute) {
                         Text("Start of Free Time")
                     }
-                    .onChange(of: mainViewModel.userStartTime) { newValue in
-                        mainViewModel.onTimeChange(for: .startOfFreeTime, newValue: newValue)
-                    }
-                    .onChange(of: mainViewModel.userEndTime) { newValue in
-                        mainViewModel.onTimeChange(for: .endOfFreeTime, newValue: newValue)
-                    }
-                    DatePicker(selection: $mainViewModel.userEndTime, in: ...Date.distantFuture, displayedComponents: .hourAndMinute) {
+                    DatePicker(selection: $mainViewModel.userEndTime, in: mainViewModel.userStartTime...today.endOfDay, displayedComponents: .hourAndMinute) {
                         Text("End of Free Time")
                     }
 

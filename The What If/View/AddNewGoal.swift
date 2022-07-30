@@ -10,11 +10,15 @@ import Combine
 
 struct AddNewGoal: View {
     @EnvironmentObject var viewModel: GoalViewModel
-//    @State var progress: String = ""
-//    @State var goal: String = ""
     @Environment(\.self) var env
     @Environment(\.colorScheme) var scheme
     @State var savePressed: Bool = false
+    
+    @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    @State private var selectedImage: UIImage?
+    @State private var isImagePickerDisplay = false
+    @State private var finishedWithError: Bool = false
+
     var textColor: Color {
         scheme == .dark ? .white : .black
     }
@@ -24,56 +28,68 @@ struct AddNewGoal: View {
             
             //MARK: Body
             
-                Text("Goal Title")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                    .foregroundColor(viewModel.goalTitle.isEmpty && savePressed ? .red : textColor)
-                TextField("Goal Title", text: $viewModel.goalTitle)
-                    .frame(maxWidth: .infinity)
-                    .padding(.top, 10)
-         
-        
+            Text("Goal Title")
+                .font(.title2)
+                .fontWeight(.semibold)
+                .foregroundColor(viewModel.goalTitle.isEmpty && savePressed ? .red : textColor)
+            TextField("Goal Title", text: $viewModel.goalTitle)
+                .frame(maxWidth: .infinity)
+                .padding(.top, 10)
+            
+            
             Divider()
-        
-                HStack {
+            
+            HStack {
                 Text("Goal Type")
                     .font(.title3)
                     .fontWeight(.light)
                     .foregroundColor(textColor)
-                    Spacer()
-                    Menu {
-                        let goalTypes = GoalType.allCases
-                        
-                        ForEach(goalTypes, id: \.self) { type in
-                            Button {
-                                viewModel.goalType = type
-                            } label: {
-                                Label(type.rawValue, systemImage: type.getImage())
-                            }
+                Spacer()
+                Menu {
+                    let goalTypes = GoalType.allCases
+                    
+                    ForEach(goalTypes, id: \.self) { type in
+                        Button {
+                            viewModel.goalType = type
+                        } label: {
+                            Label(type.rawValue, systemImage: type.getImage())
                         }
-                        
-                    } label: {
-                        if let goalType = viewModel.goalType {
-                            Label(goalType.rawValue, systemImage: goalType.getImage())
-                                .foregroundColor(textColor)
-                        }else {
-                            Text("Choose A Goal Type")
-                                .foregroundColor(textColor)
-                        }
-                        
                     }
-
+                    
+                } label: {
+                    if let goalType = viewModel.goalType {
+                        Label(goalType.rawValue, systemImage: goalType.getImage())
+                            .foregroundColor(textColor)
+                    }else {
+                        Text("Choose A Goal Type")
+                            .foregroundColor(textColor)
+                    }
+                    
                 }
+                
+            }
             
             if let goalType = viewModel.goalType {
                 Divider()
                 goalInputFields(goalType: goalType)
             }
             SaveButton("Save Goal", action: saveGoal)
-        
+            
         }
         .frame(maxHeight: .infinity, alignment: .top)
         .padding()
+        .sheet(isPresented: self.$isImagePickerDisplay) {
+            ImagePickerView(selectedImage: self.$selectedImage, sourceType: self.sourceType)
+        }
+        .alert("Couldn't create a goal", isPresented: $finishedWithError) {
+            Button("OK") {
+                finishedWithError = false
+            }
+            Button("Retry") {
+                finishedWithError = false
+                saveGoal()
+            }
+        }
     }
     
     func filterToNumbers(newValue: String) -> String {
@@ -88,8 +104,18 @@ struct AddNewGoal: View {
               !self.viewModel.progressString.trimmingCharacters(in: .whitespaces).isEmpty else {
             return
         }
-        if viewModel.addGoal(context: env.managedObjectContext){
-            env.dismiss()
+        //        if viewModel.addGoal(context: env.managedObjectContext){
+        //            env.dismiss()
+        //        }
+        Task {
+            do {
+                try await viewModel.createGoal(context: env.managedObjectContext)
+                self.viewModel.shouldRefresh = true
+                env.dismiss()
+            } catch {
+                print(error)
+                self.finishedWithError = true
+            }
         }
     }
     
@@ -104,15 +130,32 @@ struct AddNewGoal: View {
                 .foregroundColor(viewModel.goalString.isEmpty && savePressed ? .red : textColor)
             TextField(labels.goalLabel, text: $viewModel.goalString)
                 .keyboardType(.numberPad)
-                
-        
+            
+            
             Text("What is your progress?")
                 .font(.title2)
                 .fontWeight(.semibold)
                 .foregroundColor(viewModel.progressString.isEmpty && savePressed ? .red : textColor)
             TextField(labels.progressLabel, text: $viewModel.progressString)
                 .keyboardType(.numberPad)
-
+            
+            
+            HStack{
+                Text("Add an image")
+                    .fontWeight(.semibold)
+                    .font(.title3)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
+                Image(systemName: "square.and.arrow.up")
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                print("Open Images")
+                self.sourceType = .camera
+                self.isImagePickerDisplay.toggle()
+            }
+            
+            
         }
     }
     
@@ -129,16 +172,16 @@ struct AddNewGoal: View {
                 } label: {
                     Image(systemName: "xmark")
                         .font(.title3)
-//                            .render
+                    //                            .render
                         .foregroundColor(scheme == .dark ? .white : .black)
                 }
-
+                
             }
             .overlay(alignment: .trailing){
                 Button {
                     //TODO: Add a Delete Functionality
                     if let editGoal = viewModel.editGoal {
-                        NotificationManager.shared.removeNotification(for: editGoal)
+                        NotificationManager.shared.removeNotifications(for: editGoal)
                         env.managedObjectContext.delete(editGoal)
                         try? env.managedObjectContext.save()
                         env.dismiss()

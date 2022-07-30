@@ -18,14 +18,32 @@
 		F23D5B1528417C2900517C3C /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5B1428417C2900517C3C /* MainViewModel.swift */; };
 		F23D5B172841997A00517C3C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5B162841997A00517C3C /* SettingsView.swift */; };
 		F23D5B192842858500517C3C /* GoalDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5B182842858500517C3C /* GoalDetailsView.swift */; };
+		F243CE45288C73F600952990 /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = F243CE44288C73F600952990 /* Shared */; };
+		F24D93432853DC76006956B2 /* ChartsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24D93422853DC76006956B2 /* ChartsExample.swift */; };
+		F25B7C61288C6AFA00336D29 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F25B7C60288C6AFA00336D29 /* Persistence.swift */; };
+		F284A270284D33DE000A5F12 /* Date + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F284A26F284D33DE000A5F12 /* Date + Extensions.swift */; };
+		F2952281288C9E870031C45F /* MotivationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2952280288C9E870031C45F /* MotivationManager.swift */; };
+		F2997ADB285E3066007CB28F /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2997ADA285E3066007CB28F /* ImagePickerView.swift */; };
 		F2D8B2E3284BC6AB00E0843F /* UserDefaultUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D8B2E2284BC6AB00E0843F /* UserDefaultUtils.swift */; };
 		F2D8B2E6284BC7BF00E0843F /* Goal + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D8B2E5284BC7BF00E0843F /* Goal + Extensions.swift */; };
 		F2D8B2E8284BC7F700E0843F /* NSNumber + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D8B2E7284BC7F700E0843F /* NSNumber + Extensions.swift */; };
 		F2D8B2EA284BCFEA00E0843F /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D8B2E9284BCFEA00E0843F /* Time.swift */; };
 		F2D8B2ED284BD3BF00E0843F /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D8B2EC284BD3BF00E0843F /* NotificationManager.swift */; };
 		F2F34A7D284B778C004DA35C /* DynamicFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F34A7C284B778C004DA35C /* DynamicFilteredView.swift */; };
-		F2F34A7F284B7A63004DA35C /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F34A7E284B7A63004DA35C /* Persistence.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F26B149C288C64160006FEC0 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		F21614DA2844011C007C6C6D /* AddNewGoal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewGoal.swift; sourceTree = "<group>"; };
@@ -40,13 +58,19 @@
 		F23D5B1428417C2900517C3C /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		F23D5B162841997A00517C3C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F23D5B182842858500517C3C /* GoalDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalDetailsView.swift; sourceTree = "<group>"; };
+		F243CE3E288C6CA100952990 /* Shared */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Shared; path = ../Shared; sourceTree = "<group>"; };
+		F243CE43288C6E1C00952990 /* Shared */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Shared; path = ../Shared; sourceTree = "<group>"; };
+		F24D93422853DC76006956B2 /* ChartsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartsExample.swift; sourceTree = "<group>"; };
+		F25B7C60288C6AFA00336D29 /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		F284A26F284D33DE000A5F12 /* Date + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date + Extensions.swift"; sourceTree = "<group>"; };
+		F2952280288C9E870031C45F /* MotivationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotivationManager.swift; sourceTree = "<group>"; };
+		F2997ADA285E3066007CB28F /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
 		F2D8B2E2284BC6AB00E0843F /* UserDefaultUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultUtils.swift; sourceTree = "<group>"; };
 		F2D8B2E5284BC7BF00E0843F /* Goal + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Goal + Extensions.swift"; sourceTree = "<group>"; };
 		F2D8B2E7284BC7F700E0843F /* NSNumber + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSNumber + Extensions.swift"; sourceTree = "<group>"; };
 		F2D8B2E9284BCFEA00E0843F /* Time.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Time.swift; sourceTree = "<group>"; };
 		F2D8B2EC284BD3BF00E0843F /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		F2F34A7C284B778C004DA35C /* DynamicFilteredView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicFilteredView.swift; sourceTree = "<group>"; };
-		F2F34A7E284B7A63004DA35C /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Persistence.swift; path = "../../Task Manager App/Task Manager/Task Manager/Persistence.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F243CE45288C73F600952990 /* Shared in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +103,8 @@
 				F23D5B162841997A00517C3C /* SettingsView.swift */,
 				F23D5B1228417AE500517C3C /* MainTabView.swift */,
 				F2F34A7C284B778C004DA35C /* DynamicFilteredView.swift */,
+				F24D93422853DC76006956B2 /* ChartsExample.swift */,
+				F2997ADA285E3066007CB28F /* ImagePickerView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -85,8 +112,11 @@
 		F23D5AF12841782100517C3C = {
 			isa = PBXGroup;
 			children = (
+				F243CE42288C6E1C00952990 /* Packages */,
+				F243CE3E288C6CA100952990 /* Shared */,
 				F23D5AFC2841782200517C3C /* The What If */,
 				F23D5AFB2841782200517C3C /* Products */,
+				F243CE3F288C6D7C00952990 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -107,8 +137,9 @@
 				F2D8B2E1284BC69000E0843F /* Helpers */,
 				F21614E12844084D007C6C6D /* View */,
 				F2D8B2EB284BD3AE00E0843F /* Model */,
+				F2952282288C9E8C0031C45F /* Networking */,
 				F21614E02844083E007C6C6D /* ViewModel */,
-				F2F34A7E284B7A63004DA35C /* Persistence.swift */,
+				F25B7C60288C6AFA00336D29 /* Persistence.swift */,
 				F23D5B082841782200517C3C /* The_What_If.xcdatamodeld */,
 				F23D5B032841782200517C3C /* Preview Content */,
 			);
@@ -123,12 +154,36 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		F243CE3F288C6D7C00952990 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F243CE42288C6E1C00952990 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				F243CE43288C6E1C00952990 /* Shared */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		F2952282288C9E8C0031C45F /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				F2952280288C9E870031C45F /* MotivationManager.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
 		F2D8B2E1284BC69000E0843F /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
 				F2D8B2E5284BC7BF00E0843F /* Goal + Extensions.swift */,
 				F2D8B2E7284BC7F700E0843F /* NSNumber + Extensions.swift */,
 				F2D8B2E9284BCFEA00E0843F /* Time.swift */,
+				F284A26F284D33DE000A5F12 /* Date + Extensions.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -159,12 +214,16 @@
 				F23D5AF62841782200517C3C /* Sources */,
 				F23D5AF72841782200517C3C /* Frameworks */,
 				F23D5AF82841782200517C3C /* Resources */,
+				F26B149C288C64160006FEC0 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = "The What If";
+			packageProductDependencies = (
+				F243CE44288C73F600952990 /* Shared */,
+			);
 			productName = "The What If";
 			productReference = F23D5AFA2841782200517C3C /* The What If.app */;
 			productType = "com.apple.product-type.application";
@@ -176,7 +235,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1330;
+				LastSwiftUpdateCheck = 1400;
 				LastUpgradeCheck = 1330;
 				TargetAttributes = {
 					F23D5AF92841782200517C3C = {
@@ -219,7 +278,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F2F34A7F284B7A63004DA35C /* Persistence.swift in Sources */,
 				F23D5B1528417C2900517C3C /* MainViewModel.swift in Sources */,
 				F21614DB2844011C007C6C6D /* AddNewGoal.swift in Sources */,
 				F21614DF284401E8007C6C6D /* GoalViewModel.swift in Sources */,
@@ -228,13 +286,18 @@
 				F2D8B2ED284BD3BF00E0843F /* NotificationManager.swift in Sources */,
 				F2D8B2E3284BC6AB00E0843F /* UserDefaultUtils.swift in Sources */,
 				F2D8B2E6284BC7BF00E0843F /* Goal + Extensions.swift in Sources */,
+				F25B7C61288C6AFA00336D29 /* Persistence.swift in Sources */,
 				F2F34A7D284B778C004DA35C /* DynamicFilteredView.swift in Sources */,
 				F23D5B172841997A00517C3C /* SettingsView.swift in Sources */,
 				F23D5B192842858500517C3C /* GoalDetailsView.swift in Sources */,
 				F2D8B2E8284BC7F700E0843F /* NSNumber + Extensions.swift in Sources */,
+				F24D93432853DC76006956B2 /* ChartsExample.swift in Sources */,
 				F2D8B2EA284BCFEA00E0843F /* Time.swift in Sources */,
 				F23D5AFE2841782200517C3C /* The_What_IfApp.swift in Sources */,
 				F23D5B1328417AE500517C3C /* MainTabView.swift in Sources */,
+				F284A270284D33DE000A5F12 /* Date + Extensions.swift in Sources */,
+				F2997ADB285E3066007CB28F /* ImagePickerView.swift in Sources */,
+				F2952281288C9E870031C45F /* MotivationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -366,6 +429,7 @@
 				DEVELOPMENT_TEAM = 53QRKPH45R;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Is that okay?";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -395,6 +459,7 @@
 				DEVELOPMENT_TEAM = 53QRKPH45R;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Is that okay?";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -435,6 +500,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F243CE44288C73F600952990 /* Shared */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Shared;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		F23D5B082841782200517C3C /* The_What_If.xcdatamodeld */ = {

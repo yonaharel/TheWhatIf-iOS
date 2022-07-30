@@ -6,9 +6,15 @@
 //
 
 import Foundation
+import Shared
 
 extension Goal {
     func getProgress() -> Float {
         Float(progress / target)
+    }
+}
+extension Motivation {
+    func getProgress() -> Float {
+        Float(progress / goal)
     }
 }

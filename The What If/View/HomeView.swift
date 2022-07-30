@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Shared
 
 struct HomeView: View {
 
@@ -41,7 +42,7 @@ struct HomeView: View {
                         .opacity(self.midY < 70 ? 0.0 : 1.0)
                         .frame(alignment: .bottom)
                         
-                        if let selectedGoal = self.goalVM.selectedGoal {
+                        if let selectedGoal = self.goalVM.selectedMotivation {
                             buildCardDetails(selected: selectedGoal)
                                 .id("SELECTED")
                         } else {
@@ -64,7 +65,13 @@ struct HomeView: View {
                     goalVM.resetGoalData()
 
                 }) {
-                    AddNewGoal().environmentObject(goalVM)
+                    if #available(iOS 16.0, *) {
+                        AddNewGoal().environmentObject(goalVM)
+                            .presentationDetents([.medium, .large])
+                    } else {
+                        AddNewGoal().environmentObject(goalVM)
+                        // Fallback on earlier versions
+                    }
                 }
             }
             .navigationBarTitle(self.midY < 70 ? Text(self.headerText) : Text(""), displayMode: .inline)
@@ -87,16 +94,16 @@ struct HomeView: View {
     }
     
     @ViewBuilder
-    func buildCardDetails(selected: Goal) -> some View{
+    func buildCardDetails(selected: Motivation) -> some View{
         VStack(spacing: 5) {
             HStack{
                 Image(systemName: "pencil")
                     .padding()
                     .contentShape(Rectangle())
                     .onTapGesture {
-                        self.goalVM.editGoal = selected
-                        self.goalVM.isAddingNewGoal = true
-                        self.goalVM.setupGoal()
+//                        self.goalVM.editGoal = selected
+//                        self.goalVM.isAddingNewGoal = true
+//                        self.goalVM.setupGoal()
                     }
                 Spacer()
                 Image(systemName: "xmark")
@@ -108,21 +115,19 @@ struct HomeView: View {
                         }
                     }
             }
-            GoalCard(goal: selected)
+            GoalCard(motivation: selected, isExpanded: true)
                 .padding()
             
             Group {
                 VStack(alignment: .leading){
-                    Text("Your goal is \(selected.title ?? "")")
+                    Text("Your goal is \(selected.title)")
                         .font(.title3.bold())
-                    if let date = selected.addedDate{
+                    let date = selected.dueDate
+                    if let date {
                         Text("You added this goal in \(date.formatted(date: .abbreviated, time: .omitted)) at \(date.formatted(date: .omitted, time: .shortened))")
                             .font(.title3.bold())
                     }
                     
-                    Text("Your Progress is \(selected.getProgress().getPercentage())")
-                        .font(.title3)
-                        .multilineTextAlignment(.center)
                 }
             }
             .contentShape(Rectangle())
@@ -137,11 +142,13 @@ struct HomeView: View {
     }
     
     @ViewBuilder func buildGoalGrid(proxy: GeometryProxy) -> some View {
-        DynamicFilteredView(proxy: proxy) { (goal: Goal) in
-            GoalCard(goal: goal)
+        DynamicFilteredView(proxy: proxy,
+                            shouldRefresh: $goalVM.shouldRefresh,
+                            VM: self.goalVM) { motivation in
+            GoalCard(motivation: motivation)
                 .onTapGesture {
                     withAnimation {
-                        self.goalVM.selectedGoal = goal
+                        self.goalVM.selectedMotivation = motivation
                     }
                 }
         } emptyView: {
@@ -161,14 +168,12 @@ struct HomeView: View {
             .offset(y: 100)
             .padding()
         }
-        
-        
     }
     
     
     @ViewBuilder
-    func GoalCard(goal: Goal) -> some View {
-        let type = GoalType(rawValue: goal.type ?? "") ?? .other
+    func GoalCard(motivation: Motivation, isExpanded: Bool = false) -> some View {
+        let type = GoalType(from: motivation.type)
         let color: Color = type.goalColor
         VStack(alignment: .center, spacing: 20){
             
@@ -178,56 +183,77 @@ struct HomeView: View {
                 .frame(width: 30, height: 30)
             
             
-            Text(goal.title?.uppercased() ?? "")
+            Text(motivation.title.uppercased())
                 .font(.headline)
                 .fontWeight(.semibold)
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color.white)
                 .frame(height: 80)
             
-            //            Text("Your Progress")
-            //                .font(.callout)
-            //                .fontWeight(.semibold)
-            //                .foregroundColor(Color.white)
-            //                .padding()
-            ProgressBar(progress: goal.getProgress())
-                .frame(width: 60, height: 60)
+            if isExpanded{
+                if #available(iOS 16, *){
+                    let progress = motivation.getProgress()
+                    if progress >= 0 {
+                        Gauge(value: motivation.getProgress(), in: 0...1) {
+                            let percentageString = motivation.getProgress().getPercentage()
+                            Text("You've made \(percentageString), You're getting closer!")
+                                .multilineTextAlignment(.center)
+                                .font(.title2)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.white)
+                        }
+                        .gaugeStyle(.linearCapacity)
+                        .tint(.white)
+                    }
+                } else {
+                    ProgressView(value: motivation.getProgress()) {
+                        Label("Some Progress", systemImage: "person.fill.checkmark")
+                    }
+                }
+            } else {
+                ProgressBar(progress: motivation.getProgress())
+                    .frame(width: 60, height: 60)
+            }
         }
         .padding()
         .frame(maxWidth: .infinity)
         .background{
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(  LinearGradient(
-                    colors: [
-                        color.opacity(1),
-                        color.opacity(0.75),
-                        color.opacity(0.5),
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ))
+            if #available(iOS 16, *){
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                
+                    .fill(  LinearGradient(
+                        colors: [
+                            color.opacity(1),
+                            color.opacity(0.75),
+                            color.opacity(0.5),
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ).shadow(.drop(radius: 4))
+                    )
+            }
         }
         .contentShape(Rectangle())
-        .matchedGeometryEffect(id: goal.objectID, in: animation)
-        .contextMenu {
-            Button {
-                self.goalVM.editGoal = goal
-                self.goalVM.setupGoal()
-                self.goalVM.isAddingNewGoal = true
-            } label: {
-                Label("Edit Goal", systemImage: "pencil")
-            }
-            Button(role: .destructive) {
-                withAnimation{
-                    NotificationManager.shared.removeNotification(for: goal)
-                    env.managedObjectContext.delete(goal)
-                    try? env.managedObjectContext.save()
-                    self.goalVM.selectedGoal = nil
-                }
-            } label: {
-                Label("Delege Goal", systemImage: "trash")
-            }
-        }
+        .matchedGeometryEffect(id: motivation.id, in: animation)
+//        .contextMenu {
+//            Button {
+//                self.goalVM.editGoal = goal
+//                self.goalVM.setupGoal()
+//                self.goalVM.isAddingNewGoal = true
+//            } label: {
+//                Label("Edit Goal", systemImage: "pencil")
+//            }
+//            Button(role: .destructive) {
+//                withAnimation{
+//                    NotificationManager.shared.removeNotifications(for: goal)
+//                    env.managedObjectContext.delete(goal)
+//                    try? env.managedObjectContext.save()
+//                    self.goalVM.selectedGoal = nil
+//                }
+//            } label: {
+//                Label("Delege Goal", systemImage: "trash")
+//            }
+//        }
     }
 }
 

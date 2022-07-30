@@ -6,40 +6,57 @@
 //
 
 import SwiftUI
-
+import Combine
 class MainViewModel: ObservableObject {
     @Published var currentTab: TabItem = .home
-    @Published var notificationsOn: Bool = UserDefaultUtils.getBool(for: .notifications) ?? false
+    @Published var notificationsOn: Bool = UserDefaultUtils.getBool(for: .notifications)
     @Published var userStartTime: Date = UserDefaultUtils.getDate(for: .startOfFreeTime) ?? Date()
     @Published var userEndTime: Date = UserDefaultUtils.getDate(for: .endOfFreeTime) ?? Calendar.current.date(byAdding: .hour, value: 1, to: .now)!
-
-
+    
+    var cancellables = Set<AnyCancellable>()
+    
+    init() {
+        bindItems()
+    }
+    
+    private func bindItems() {
+        NotificationManager.shared.didRecieveNotificationId
+            .map{ _ in TabItem.home }
+            .assign(to: &$currentTab)
+        
+        Publishers.CombineLatest($userStartTime, $userEndTime)
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: onTimeChange)
+            .store(in: &self.cancellables)
+        
+    }
+    
 }
+
+
 extension MainViewModel {
     func resetSettings() {
         notificationsOn = false
         userStartTime = Calendar.current.startOfDay(for: .now)
         userEndTime = userStartTime.addingTimeInterval(60*30)
     }
+
 }
 
-extension MainViewModel {
 
-    func onTimeChange(for key: UserDefaults.Key, newValue: Date){
-        switch key {
-        case .startOfFreeTime:
-            if userEndTime.time <= newValue.time{
-                userEndTime = newValue.addingTimeInterval(60*60)
+//MARK: - On Time Change
+extension MainViewModel {
+    func onTimeChange(startTime: Date, endTime: Date){
+        if endTime.time <= startTime.time {
+            let calendar = Calendar.current
+            if let newEndTime = calendar.date(byAdding: .hour, value: 1, to: startTime) {
+                self.userEndTime = newEndTime
             }
-        case .endOfFreeTime:
-            if newValue.time <= userStartTime.time{
-                userEndTime = userStartTime.addingTimeInterval(60*60)
-            }
-        default:
-            return
         }
-        UserDefaultUtils.setValue(value: newValue, for: key)
-        
+        UserDefaultUtils.setValues([
+            .startOfFreeTime: startTime,
+            .endOfFreeTime: endTime
+        ])
     }
 }
 

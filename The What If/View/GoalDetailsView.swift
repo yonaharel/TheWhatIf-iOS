@@ -29,12 +29,21 @@ struct GoalDetailsView: View {
                 .multilineTextAlignment(.center)
                 
                 Text("Progress:")
-                    .font(.title)
+                    .font(.title2)
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
-                ProgressBar(progress: progress)
-                    .frame(width: 80)
-                
+                    .padding()
+                if #available(iOS 16, *){
+                    Gauge(value: 0.7, in: 0...1) {
+                    }
+                    .gaugeStyle(.linearCapacity)
+                    .tint(.white)
+                    
+                    
+                } else {
+                    ProgressBar(progress: progress)
+                        .frame(width: 80)
+                }
             }
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)

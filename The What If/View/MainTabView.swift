@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 enum TabItem{
 //    case settings
@@ -37,6 +38,7 @@ struct MainTabView: View {
         .home,
         .settings
     ]
+    
     var body: some View {
         TabView(selection: $mainVM.currentTab){
             HomeView()
@@ -51,30 +53,12 @@ struct MainTabView: View {
                 }.tag(TabItem.settings)
             
         }
-        .onAppear{
-            if UserDefaultUtils.getString(for: .notificationId) != nil{
-                mainVM.currentTab = .home
-            }
-        }
         .onChange(of: mainVM.currentTab) { newValue in
             print(newValue)
         }
     }
     
-    private func buildTabBar() -> some View {
-        VStack(spacing: 0) {
-            Divider().frame(height: 0.1)
-            HStack(alignment: .center) {
-                ForEach(items, id: \.self){ item in
-                    buildTabBarItem(tabItem: item)
-                        .padding(.top, 25)
-                }
-            }
-            .padding()
-            .frame(height: 50)
-            .background(.gray.opacity(0.1))
-        }
-    }
+
     
     private func buildTabBarItem(tabItem: TabItem) -> some View {
         VStack {
@@ -84,15 +68,9 @@ struct MainTabView: View {
             Text(tabItem.text)
                 .font(.callout)
                 .fontWeight(.semibold)
-        }//.frame(maxWidth: .infinity)
-//            .contentShape(Rectangle())
-//            .onTapGesture {
-//                withAnimation{
-//                    mainVM.currentTab = tabItem
-//                }
-//            }
-            .foregroundColor(mainVM.currentTab == tabItem ? (colorScheme == .dark ? .white : .black) : .gray)
-            
+        }
+        .foregroundColor(mainVM.currentTab == tabItem ? (colorScheme == .dark ? .white : .black) : .gray)
+        
     }
 }
 
