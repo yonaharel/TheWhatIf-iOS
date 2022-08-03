@@ -16,7 +16,12 @@ enum UserError: Error {
     case notImplemented
 }
 
-
+enum ResultState<T, E: Error> {
+    case found(T)
+    case loading
+    case failed(E)
+    case waiting
+}
 class GoalViewModel: ObservableObject, ItemsViewModel {
     
     //MARK: Editing Existing Goal Data
@@ -30,6 +35,9 @@ class GoalViewModel: ObservableObject, ItemsViewModel {
     
     @Published var isDeletingGoal = false
 
+    @Published var result = ResultState<[Goal], Error>.waiting
+
+    @Published var showError: Bool = false
     var isDeleted = false
     
     private var cancellables = Set<AnyCancellable>()
@@ -44,6 +52,22 @@ class GoalViewModel: ObservableObject, ItemsViewModel {
     
     func getItems() async throws -> [Goal] {
         try await networkManager.getAllGoals()
+    }
+    
+    @MainActor
+    func fetchGoals() async {
+        do {
+            let goals = try await getItems()
+            withAnimation {
+                self.result = .found(goals)
+                self.showError = false
+            }
+        } catch {
+            withAnimation {
+                self.showError = true
+                self.result = .failed(error)
+            }
+        }
     }
 }
 

@@ -55,7 +55,9 @@ struct HomeView: View {
                                         }
                                     }
                                 }
-                            
+                                .task {
+                                    await viewModel.fetchGoals()
+                                }
                         }
                     }
                 }.sheet(isPresented: $viewModel.isAddingNewGoal, onDismiss: {
@@ -142,17 +144,31 @@ struct HomeView: View {
     
     @ViewBuilder
     func buildGoalGrid(proxy: GeometryProxy) -> some View {
-        DynamicFilteredView(proxy: proxy,
-                            shouldRefresh: $viewModel.shouldRefresh,
-                            VM: self.viewModel) { goal in
-            GoalCard(goal: goal)
-                .onTapGesture {
-                    withAnimation {
-                        self.viewModel.selectedGoal = goal
-                    }
+        switch viewModel.result {
+        case .found(let goals):
+            let width = (proxy.size.width / 2) - 10
+            let colums = [
+                GridItem(.fixed(width)),
+                GridItem(.fixed(width)),
+            ]
+            LazyVGrid(columns: colums) {
+                ForEach(goals) { goal in
+                    GoalCard(goal: goal)
+                        .onTapGesture {
+                            withAnimation {
+                                self.viewModel.selectedGoal = goal
+                            }
+                        }
                 }
-        } emptyView: {
-            VStack{
+            }
+        case .failed(let error):
+            Spacer()
+                .frame(height: proxy.size.height - 175)
+            ErrorView(error: error)
+                .transition(.move(edge: .bottom))
+                .animation(.spring(), value: viewModel.showError)
+        case .loading, .waiting:
+            VStack {
                 Image(systemName: "plus.square.fill")
                     .resizable()
                     .frame(width: 80, height: 80)
@@ -165,10 +181,7 @@ struct HomeView: View {
                     .fontWeight(.semibold)
                     .multilineTextAlignment(.center)
             }
-            .offset(y: 100)
-            .padding()
         }
-        
     }
     
     
@@ -305,5 +318,21 @@ struct HeaderView: View {
                 .bold()
                 .font(.largeTitle)
         }
+    }
+}
+
+struct ErrorView<E: Error>: View {
+    let error: E
+    
+    var body: some View {
+        Text("\(error.localizedDescription)")
+            .font(.callout)
+            .multilineTextAlignment(.center)
+            .foregroundColor(.white)
+            .padding()
+            .background {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(.red)
+            }
     }
 }
