@@ -37,9 +37,11 @@ class GoalViewModel: ObservableObject, ItemsViewModel {
     enum Action {
         case refresh
         case waiting
-        case refreshItem(goal: Goal)
+        case refreshItem(goal: Goal?)
         case deleted
     }
+    
+ 
     
     var isDeleted = false
     var counter = 0
@@ -54,14 +56,14 @@ class GoalViewModel: ObservableObject, ItemsViewModel {
 //    }
     init() {
         $action
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .asyncMap {
                 switch $0 {
                 case .refresh:
                     await self.fetchGoals()
                 case .deleted:
-                    await self.fetchGoals()
-                    await self.updateSelected(with: nil)
+                    _ = await [self.fetchGoals(), self.updateSelected(with: nil)]
                 case .refreshItem(let goal):
                     await self.updateSelected(with: goal)
                 default:
@@ -162,17 +164,12 @@ extension GoalType {
   
 }
 
-extension Publisher {
-    func asyncMap<T>(
-        _ transform: @escaping (Output) async -> T
-    ) -> Publishers.FlatMap<Future<T, Never>, Self> {
-        flatMap { value in
-            Future { promise in
-                Task {
-                    let output = await transform(value)
-                    promise(.success(output))
-                }
-            }
-        }
+extension GoalViewModel.Action: Equatable {
+    static func == (lhs: GoalViewModel.Action, rhs: GoalViewModel.Action) -> Bool {
+        lhs.identifier == rhs.identifier
+    }
+    
+    var identifier: Int {
+       [.refresh, .waiting, .refreshItem(goal: nil), .deleted].firstIndex(of: self) ?? 0
     }
 }

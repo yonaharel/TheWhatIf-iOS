@@ -23,6 +23,7 @@
 		F25B7C61288C6AFA00336D29 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F25B7C60288C6AFA00336D29 /* Persistence.swift */; };
 		F284A270284D33DE000A5F12 /* Date + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F284A26F284D33DE000A5F12 /* Date + Extensions.swift */; };
 		F28D029D289D7DE70026D294 /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = F28D029C289D7DE70026D294 /* Shared */; };
+		F28D029F289D97E10026D294 /* Combine + Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = F28D029E289D97E10026D294 /* Combine + Concurrency.swift */; };
 		F2952281288C9E870031C45F /* MotivationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2952280288C9E870031C45F /* MotivationManager.swift */; };
 		F2997ADB285E3066007CB28F /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2997ADA285E3066007CB28F /* ImagePickerView.swift */; };
 		F2D8B2E3284BC6AB00E0843F /* UserDefaultUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D8B2E2284BC6AB00E0843F /* UserDefaultUtils.swift */; };
@@ -63,6 +64,7 @@
 		F24D93422853DC76006956B2 /* ChartsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartsExample.swift; sourceTree = "<group>"; };
 		F25B7C60288C6AFA00336D29 /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		F284A26F284D33DE000A5F12 /* Date + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date + Extensions.swift"; sourceTree = "<group>"; };
+		F28D029E289D97E10026D294 /* Combine + Concurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Combine + Concurrency.swift"; sourceTree = "<group>"; };
 		F2952280288C9E870031C45F /* MotivationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotivationManager.swift; sourceTree = "<group>"; };
 		F2997ADA285E3066007CB28F /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
 		F2D8B2E2284BC6AB00E0843F /* UserDefaultUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultUtils.swift; sourceTree = "<group>"; };
@@ -175,6 +177,7 @@
 				F2D8B2E7284BC7F700E0843F /* NSNumber + Extensions.swift */,
 				F2D8B2E9284BCFEA00E0843F /* Time.swift */,
 				F284A26F284D33DE000A5F12 /* Date + Extensions.swift */,
+				F28D029E289D97E10026D294 /* Combine + Concurrency.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -289,6 +292,7 @@
 				F24D93432853DC76006956B2 /* ChartsExample.swift in Sources */,
 				F2D8B2EA284BCFEA00E0843F /* Time.swift in Sources */,
 				F23D5AFE2841782200517C3C /* The_What_IfApp.swift in Sources */,
+				F28D029F289D97E10026D294 /* Combine + Concurrency.swift in Sources */,
 				F23D5B1328417AE500517C3C /* MainTabView.swift in Sources */,
 				F284A270284D33DE000A5F12 /* Date + Extensions.swift in Sources */,
 				F2997ADB285E3066007CB28F /* ImagePickerView.swift in Sources */,
