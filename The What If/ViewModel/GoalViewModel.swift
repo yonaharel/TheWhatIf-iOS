@@ -28,18 +28,21 @@ class GoalViewModel: ObservableObject, ItemsViewModel {
     @Published var editGoal: Goal?
     
     @Published var selectedGoal: Goal?
-
-    @Published var shouldRefresh: Bool = false
-    
     @Published var isAddingNewGoal = false
-    
     @Published var isDeletingGoal = false
-
     @Published var result = ResultState<[Goal], Error>.waiting
-
     @Published var showError: Bool = false
-    var isDeleted = false
+    @Published var action: Action = .waiting
     
+    enum Action {
+        case refresh
+        case waiting
+        case refreshItem(goal: Goal)
+        case deleted
+    }
+    
+    var isDeleted = false
+    var counter = 0
     private var cancellables = Set<AnyCancellable>()
     
     let networkManager = GoalNetworkManager()
@@ -49,9 +52,35 @@ class GoalViewModel: ObservableObject, ItemsViewModel {
 //            self.selectedGoal = self.selectGoalFromNotification(context: context, id: notificationId)
 //        }.store(in: &cancellables)
 //    }
-    
+    init() {
+        $action
+            .receive(on: DispatchQueue.main)
+            .asyncMap {
+                switch $0 {
+                case .refresh:
+                    await self.fetchGoals()
+                case .deleted:
+                    await self.fetchGoals()
+                    await self.updateSelected(with: nil)
+                case .refreshItem(let goal):
+                    await self.updateSelected(with: goal)
+                default:
+                    break
+                }
+            }
+            .eraseToAnyPublisher()
+            .sink(receiveValue: { _ in })
+            .store(in: &self.cancellables)
+    }
     func getItems() async throws -> [Goal] {
         try await networkManager.getAllGoals()
+    }
+    
+    @MainActor
+    private func updateSelected(with goal: Goal?) {
+        withAnimation {
+            self.selectedGoal = goal
+        }
     }
     
     @MainActor
@@ -73,6 +102,20 @@ class GoalViewModel: ObservableObject, ItemsViewModel {
 
 
 extension GoalType {
+    var description: String {
+        switch self {
+        case .leisure:
+            return "Take A Rest"
+        case .sports:
+            return "Have A Workout"
+        case .education:
+            return "Learn Something New"
+        case .other:
+            return "We Don't Have It Yet"
+        case .family:
+            return "Spend Time with the family"
+        }
+    }
     
     func getImage() -> String {
         switch self {
@@ -119,3 +162,17 @@ extension GoalType {
   
 }
 
+extension Publisher {
+    func asyncMap<T>(
+        _ transform: @escaping (Output) async -> T
+    ) -> Publishers.FlatMap<Future<T, Never>, Self> {
+        flatMap { value in
+            Future { promise in
+                Task {
+                    let output = await transform(value)
+                    promise(.success(output))
+                }
+            }
+        }
+    }
+}

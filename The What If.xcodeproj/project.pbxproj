@@ -19,10 +19,10 @@
 		F23D5B1528417C2900517C3C /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5B1428417C2900517C3C /* MainViewModel.swift */; };
 		F23D5B172841997A00517C3C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5B162841997A00517C3C /* SettingsView.swift */; };
 		F23D5B192842858500517C3C /* GoalDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23D5B182842858500517C3C /* GoalDetailsView.swift */; };
-		F243CE45288C73F600952990 /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = F243CE44288C73F600952990 /* Shared */; };
 		F24D93432853DC76006956B2 /* ChartsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24D93422853DC76006956B2 /* ChartsExample.swift */; };
 		F25B7C61288C6AFA00336D29 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F25B7C60288C6AFA00336D29 /* Persistence.swift */; };
 		F284A270284D33DE000A5F12 /* Date + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F284A26F284D33DE000A5F12 /* Date + Extensions.swift */; };
+		F28D029D289D7DE70026D294 /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = F28D029C289D7DE70026D294 /* Shared */; };
 		F2952281288C9E870031C45F /* MotivationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2952280288C9E870031C45F /* MotivationManager.swift */; };
 		F2997ADB285E3066007CB28F /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2997ADA285E3066007CB28F /* ImagePickerView.swift */; };
 		F2D8B2E3284BC6AB00E0843F /* UserDefaultUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D8B2E2284BC6AB00E0843F /* UserDefaultUtils.swift */; };
@@ -60,8 +60,6 @@
 		F23D5B1428417C2900517C3C /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		F23D5B162841997A00517C3C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F23D5B182842858500517C3C /* GoalDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalDetailsView.swift; sourceTree = "<group>"; };
-		F243CE3E288C6CA100952990 /* Shared */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Shared; path = ../Shared; sourceTree = "<group>"; };
-		F243CE43288C6E1C00952990 /* Shared */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Shared; path = ../Shared; sourceTree = "<group>"; };
 		F24D93422853DC76006956B2 /* ChartsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartsExample.swift; sourceTree = "<group>"; };
 		F25B7C60288C6AFA00336D29 /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		F284A26F284D33DE000A5F12 /* Date + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date + Extensions.swift"; sourceTree = "<group>"; };
@@ -80,7 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F243CE45288C73F600952990 /* Shared in Frameworks */,
+				F28D029D289D7DE70026D294 /* Shared in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,8 +113,6 @@
 		F23D5AF12841782100517C3C = {
 			isa = PBXGroup;
 			children = (
-				F243CE42288C6E1C00952990 /* Packages */,
-				F243CE3E288C6CA100952990 /* Shared */,
 				F23D5AFC2841782200517C3C /* The What If */,
 				F23D5AFB2841782200517C3C /* Products */,
 				F243CE3F288C6D7C00952990 /* Frameworks */,
@@ -162,14 +158,6 @@
 			children = (
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		F243CE42288C6E1C00952990 /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-				F243CE43288C6E1C00952990 /* Shared */,
-			);
-			name = Packages;
 			sourceTree = "<group>";
 		};
 		F2952282288C9E8C0031C45F /* Networking */ = {
@@ -225,7 +213,7 @@
 			);
 			name = "The What If";
 			packageProductDependencies = (
-				F243CE44288C73F600952990 /* Shared */,
+				F28D029C289D7DE70026D294 /* Shared */,
 			);
 			productName = "The What If";
 			productReference = F23D5AFA2841782200517C3C /* The What If.app */;
@@ -255,6 +243,9 @@
 				Base,
 			);
 			mainGroup = F23D5AF12841782100517C3C;
+			packageReferences = (
+				F28D029B289D7DE70026D294 /* XCRemoteSwiftPackageReference "TheWhatIfCore" */,
+			);
 			productRefGroup = F23D5AFB2841782200517C3C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -505,9 +496,21 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		F28D029B289D7DE70026D294 /* XCRemoteSwiftPackageReference "TheWhatIfCore" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/yonaharel/TheWhatIfCore.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
-		F243CE44288C73F600952990 /* Shared */ = {
+		F28D029C289D7DE70026D294 /* Shared */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = F28D029B289D7DE70026D294 /* XCRemoteSwiftPackageReference "TheWhatIfCore" */;
 			productName = Shared;
 		};
 /* End XCSwiftPackageProductDependency section */

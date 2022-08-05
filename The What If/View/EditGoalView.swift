@@ -10,6 +10,7 @@ import Combine
 import Shared
 
 struct EditGoalView: View {
+    
     @StateObject var viewModel: EditGoalViewModel
     @EnvironmentObject var goalViewModel: GoalViewModel
     @Environment(\.self) var env
@@ -54,15 +55,15 @@ struct EditGoalView: View {
                         Button {
                             viewModel.goalType = type
                         } label: {
-                            Label(type.rawValue, systemImage: type.getImage())
+                            Label(type.description, systemImage: type.getImage())
                         }
                     }
                     
                 } label: {
                     if let goalType = viewModel.goalType {
-                        Label(goalType.rawValue, systemImage: goalType.getImage())
+                        Label(goalType.description, systemImage: goalType.getImage())
                             .foregroundColor(textColor)
-                    }else {
+                    } else {
                         Text("Choose A Goal Type")
                             .foregroundColor(textColor)
                     }
@@ -80,9 +81,6 @@ struct EditGoalView: View {
         }
         .frame(maxHeight: .infinity, alignment: .top)
         .padding()
-        .sheet(isPresented: self.$isImagePickerDisplay) {
-            ImagePickerView(selectedImage: self.$selectedImage, sourceType: self.sourceType)
-        }
         .alert("Couldn't create a goal", isPresented: $finishedWithError) {
             Button("OK") {
                 finishedWithError = false
@@ -108,9 +106,10 @@ struct EditGoalView: View {
         }
         Task {
             do {
-                try await viewModel.createGoal()
-                goalViewModel.shouldRefresh = true
-                env.dismiss()
+                if let goal = try await viewModel.createGoal() {
+                    goalViewModel.action = .refreshItem(goal: goal)
+                    env.dismiss()
+                }
             } catch {
                 print(error)
                 self.finishedWithError = true
@@ -121,46 +120,34 @@ struct EditGoalView: View {
     @ViewBuilder
     private func goalInputFields(goalType: GoalType) -> some View {
         let labels = goalType.getLabels()
-        
         VStack(alignment: .leading, spacing: 10) {
             Text("What is your Goal?")
                 .font(.title2)
                 .fontWeight(.semibold)
                 .foregroundColor(viewModel.goalString.isEmpty && savePressed ? .red : textColor)
+            
             TextField(labels.goalLabel, text: $viewModel.goalString)
                 .keyboardType(.numberPad)
-            
             
             Text("What is your progress?")
                 .font(.title2)
                 .fontWeight(.semibold)
                 .foregroundColor(viewModel.progressString.isEmpty && savePressed ? .red : textColor)
+            
             TextField(labels.progressLabel, text: $viewModel.progressString)
                 .keyboardType(.numberPad)
-            
-            
-            HStack{
-                Text("Add an image")
-                    .fontWeight(.semibold)
-                    .font(.title3)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                
-                Image(systemName: "square.and.arrow.up")
-            }
             .contentShape(Rectangle())
             .onTapGesture {
                 print("Open Images")
                 self.sourceType = .camera
                 self.isImagePickerDisplay.toggle()
             }
-            
-            
         }
     }
     
     
     @ViewBuilder
-    private func buildTitleAndButtons() -> some View{
+    private func buildTitleAndButtons() -> some View {
         //MARK: Header
         Text(isEditing ? "Edit Goal" : "Add Goal")
             .font(.title3.bold())
@@ -179,10 +166,15 @@ struct EditGoalView: View {
             .overlay(alignment: .trailing){
                 Button {
                     //TODO: Add a Delete Functionality
-                    if let editGoal = viewModel.editGoal {
-                        NotificationManager.shared.removeNotifications(for: editGoal)
-                        env.dismiss()
-                    }
+                        Task {
+                            if await viewModel.deleteGoal() {
+//                                NotificationManager.shared.removeNotifications(for: editGoal)
+                                goalViewModel.action = .deleted
+                                env.dismiss()
+                            } else {
+                                self.finishedWithError = true
+                            }
+                        }
                 } label: {
                     Image(systemName: "trash")
                         .font(.title3)

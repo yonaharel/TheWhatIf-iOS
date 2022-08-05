@@ -16,7 +16,7 @@ enum NetworkError: Error {
 enum GoalRequest {
     case create(goal: Goal)
     case update(goal: Goal)
-    case remove
+    case remove(id: String)
     case getAll
     case getById(id: String)
     
@@ -45,12 +45,10 @@ enum GoalRequest {
             return "/create"
         case .update:
             return "/update"
-        case .remove:
-            return "/remove"
         case .getAll:
             return "/all"
-        case .getById(let id):
-            return "/\(id)"
+        case .getById(let id), .remove(let id):
+            return "/" + id
         }
     }
     

@@ -15,33 +15,16 @@ struct HomeView: View {
     @Namespace var animation
     @StateObject var viewModel: GoalViewModel = GoalViewModel()
     @Environment(\.self) var env
+    
+
     var body: some View {
         NavigationView {
-            GeometryReader{ proxy in
+            GeometryReader { proxy in
                 ScrollView(.vertical, showsIndicators: false) {
                     ScrollViewReader { scrollProxy in
-                        
-                        HStack {
-                            //text
-                            HeaderView(headerText: self.headerText, midY: $midY)
-                                .frame(height: 40, alignment: .leading)
-                                .padding(.vertical, 5)
-                                .padding(.leading, 10)
-                            
-                            HStack {
-                                Button(action: {
-                                    viewModel.isAddingNewGoal = true
-                                }) {
-                                    Image(systemName: "plus.circle")
-                                        .font(.largeTitle)
-                                }
-                            }.padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 16))
-                                .foregroundColor(.blue)
-                        }
-                        .frame(height: 40, alignment: .leading)
-                        .opacity(self.midY < 70 ? 0.0 : 1.0)
-                        .frame(alignment: .bottom)
-                        
+                        // MARK: - Header
+                        buildHeader()
+
                         if let selectedGoal = self.viewModel.selectedGoal {
                             buildCardDetails(selected: selectedGoal)
                                 .id("SELECTED")
@@ -60,7 +43,8 @@ struct HomeView: View {
                                 }
                         }
                     }
-                }.sheet(isPresented: $viewModel.isAddingNewGoal, onDismiss: {
+                }
+                .sheet(isPresented: $viewModel.isAddingNewGoal, onDismiss: {
                     if viewModel.isDeleted {
                         self.viewModel.selectedGoal = nil
                     }
@@ -93,6 +77,30 @@ struct HomeView: View {
           
         
         
+    }
+    @ViewBuilder
+    func buildHeader() -> some View {
+        HStack {
+            //text
+            HeaderView(headerText: self.headerText, midY: $midY)
+                .frame(height: 40, alignment: .leading)
+                .padding(.vertical, 5)
+                .padding(.leading, 10)
+            
+            HStack {
+                Button {
+                    viewModel.isAddingNewGoal = true
+                } label: {
+                    Image(systemName: "plus.circle")
+                        .font(.largeTitle)
+                }
+            }
+            .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 16))
+            .foregroundColor(.blue)
+        }
+        .frame(height: 40, alignment: .leading)
+        .opacity(self.midY < 70 ? 0.0 : 1.0)
+        .frame(alignment: .bottom)
     }
     
     @ViewBuilder

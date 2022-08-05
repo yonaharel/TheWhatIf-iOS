@@ -10,6 +10,6 @@ import Shared
 
 extension Goal {
     func getProgress() -> Float {
-        Float(progress / target)
+        Float(progress) / Float(target)
     }
 }

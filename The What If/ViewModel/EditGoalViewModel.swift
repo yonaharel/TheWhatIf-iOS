@@ -26,11 +26,19 @@ class EditGoalViewModel: ObservableObject {
         setupGoal()
     }
     
-    func deleteGoal(_ goal: Goal) async throws {
-        throw UserError.notImplemented
+    func deleteGoal() async -> Bool {
+        do {
+            guard let editGoal else { return false }
+            try await _ = network.performRequest(for: .remove(id: editGoal.id.uuidString))
+            return true
+        } catch {
+            print(error)
+            return false
+        }
     }
     
-    func createGoal() async throws {
+    @MainActor
+    func createGoal() async throws -> Goal? {
         guard let target = Int(goalString),
               let currentProgress = Int(progressString),
               target > 0 else {
@@ -46,13 +54,14 @@ class EditGoalViewModel: ObservableObject {
         )
         
         if editGoal != nil {
-            _ = try await network.updateGoal(goal)
-            return
+            dump(goal)
+            return try await network.updateGoal(goal)
         }
         
         if try await network.createGoal(goal) {
-            print("SUCCESS")
+            return goal
         }
+        return nil
     }
     
     //MARK: If Edit Goal is Available then Setting Existing Data
